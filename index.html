@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>India Grade 3 — NAS/PRS Dashboard</title>
+<title>India Grade 3: NAS/PRS Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -95,7 +95,7 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
 </head>
 <body>
 <div class="topbar">
-  <div class="brand">India Grade 3 — <span>NAS 2017 · NAS 2021 · PRS 2024</span></div>
+  <div class="brand">India Grade 3: <span>NAS 2017 · NAS 2021 · PRS 2024</span></div>
   <div class="tabs">
     <div class="tab active" onclick="go('overview',this)">Overview</div>
     <div class="tab" onclick="go('states',this)">State Analysis</div>
@@ -113,46 +113,46 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
 <div style="height:12px"></div>
 <div class="col3">
   <div class="kpi" style="border-top:3px solid var(--gold)">
-    <div class="yr">NAS 2017 — BASELINE</div><div class="num">65.7%</div>
+    <div class="yr">NAS 2017: BASELINE</div><div class="num">65.7%</div>
     <div class="sub">Language + Math avg | Govt+Aided only</div>
     <span class="badge b-gray">Starting point</span>
   </div>
   <div class="kpi" style="border-top:3px solid var(--red)">
-    <div class="yr">NAS 2021 — COVID YEAR</div><div class="num">59.0%</div>
+    <div class="yr">NAS 2021: COVID YEAR</div><div class="num">59.0%</div>
     <div class="sub">Language + Math + EVS avg | All schools</div>
-    <span class="badge b-red">▼ 6.7 pp — biggest ever drop</span>
+    <span class="badge b-red">▼ 6.7 pp: biggest ever drop</span>
   </div>
   <div class="kpi" style="border-top:3px solid var(--teal)">
-    <div class="yr">PRS 2024 — TODAY</div><div class="num">62.0%</div>
+    <div class="yr">PRS 2024: TODAY</div><div class="num">62.0%</div>
     <div class="sub">Language + Math avg | All schools</div>
     <span class="badge b-grn">▲ 3 pp recovery · Still 3.7pp below 2017</span>
   </div>
 </div>
 
 <div class="col2">
-  <div class="card"><h3>National trend — Language & Math (%)</h3>
+  <div class="card"><h3>National trend: Language & Math (%)</h3>
     <div style="position:relative;height:200px"><canvas id="ov1" role="img" aria-label="Trend">Language: 66.7, 62, 64. Math: 64.6, 57, 60.</canvas></div>
     <div class="ins ins-red" style="margin-top:10px"><b>The IRT paradox:</b> Average score still below 2017, but <em>more</em> children now reach proficiency (Lang: 47%→57%, Math: 53%→65%). Top half recovered fast; bottom half still behind.</div>
   </div>
-  <div class="card"><h3>Subject comparison — all 3 rounds</h3>
+  <div class="card"><h3>Subject comparison: all 3 rounds</h3>
     <div style="position:relative;height:200px"><canvas id="ov2" role="img" aria-label="Subject">Lang and Math by year.</canvas></div>
-    <div class="ins ins-amber" style="margin-top:10px"><b>Maths is the bigger problem:</b> Dropped 7.6pp in COVID (vs Language\'s 4.7pp). Still 4.6pp below 2017. Maths requires classroom instruction — it cannot be self-studied at home.</div>
+    <div class="ins ins-amber" style="margin-top:10px"><b>Maths is the bigger problem:</b> Dropped 7.6pp in COVID (vs Language\'s 4.7pp). Still 4.6pp below 2017. Maths requires classroom instruction: it cannot be self-studied at home.</div>
   </div>
 </div>
 
 <div class="col2">
-  <div class="card"><h3>IRT proficiency — % children meeting minimum standard</h3>
+  <div class="card"><h3>IRT proficiency: % children meeting minimum standard</h3>
     <div style="position:relative;height:180px"><canvas id="ov3" role="img" aria-label="IRT">IRT: Lang 47,39,57. Math 53,42,65.</canvas></div>
-    <p style="font-size:10px;color:var(--g5);margin-top:6px">Note: Methodology changed between rounds — use directionally. The gap between falling averages and rising proficiency reveals a widening inequality within states.</p>
+    <p style="font-size:10px;color:var(--g5);margin-top:6px">Note: Methodology changed between rounds: use directionally. The gap between falling averages and rising proficiency reveals a widening inequality within states.</p>
   </div>
   <div class="card"><h3>What changed between 2021 and 2024?</h3>
     <div id="recoveryRows"></div>
-    <div class="ins ins-green" style="margin-top:8px"><b>State Govt schools recovered most (+5pp)</b> — NIPUN Bharat concentrated teacher training and TLM in government schools. Private schools actually fell (−3pp).</div>
+    <div class="ins ins-green" style="margin-top:8px"><b>State Govt schools recovered most (+5pp)</b>: NIPUN Bharat concentrated teacher training and TLM in government schools. Private schools actually fell (−3pp).</div>
   </div>
 </div>
 
 <div class="card" style="margin-bottom:12px">
-  <h3>Trend projection — when does India return to 2017 levels?</h3>
+  <h3>Trend projection: when does India return to 2017 levels?</h3>
   <div style="position:relative;height:200px"><canvas id="trendProj" role="img" aria-label="Projection chart showing Language and Math recovery trends to 2017 baseline. Language: 2028, Math: 2029 at current rate.">Projection: Language baseline restored 2028, Maths 2029 at current rate. Optimistic: 2026. Pessimistic: 2032+.</canvas></div>
   <div class="ins ins-amber" style="margin-top:8px"><b>At current recovery rate</b> (+2pp/3yr Language, +3pp/3yr Maths): Language reaches 2017 baseline (~66.7%) by <b>2028</b>. Maths reaches 2017 baseline (~64.6%) by <b>2029</b>. If NIPUN scales to 2x pace: 2026. If any disruption: 2032+. This projection assumes no policy reversal, no school closures, and NIPUN Bharat continues at current intensity.</div>
 </div>
@@ -166,7 +166,7 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
 <div class="sec">Explore any state</div>
 <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap">
   <select id="stateSelect" onchange="loadState()">
-    <option value="">— Select a state / UT —</option>
+    <option value="">- Select a state / UT -</option>
   </select>
   <span style="font-size:11px;color:var(--g5)">National averages: 2017=65.7% · 2021 Lang=62% · 2024 Lang=64%</span>
 </div>
@@ -213,7 +213,7 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
     </div>
   </div>
   <div class="col2">
-    <div class="card"><h3 id="spChartTitle">State vs National — Language</h3>
+    <div class="card"><h3 id="spChartTitle">State vs National: Language</h3>
       <div style="position:relative;height:180px"><canvas id="spChart" role="img" aria-label="State vs national">State comparison.</canvas></div>
     </div>
     <div class="card"><h3>Pairwise analysis</h3>
@@ -223,14 +223,14 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
 </div>
 
 
-<div class="sec">Scatter analysis — clusters and patterns</div>
+<div class="sec">Scatter analysis: clusters and patterns</div>
 
-<div class="ins ins-blue" style="margin-bottom:10px">Language vs Maths: correlation r=0.987 across all 36 states in 2021. <b>No state is above national average in one subject but below in the other</b> — they always move together. You cannot fix Maths without fixing Language. Same systemic factors (teacher quality, parental education, school infrastructure) drive both subjects equally.</div>
+<div class="ins ins-blue" style="margin-bottom:10px">Language vs Maths: correlation r=0.987 across all 36 states in 2021. <b>No state is above national average in one subject but below in the other</b>: they always move together. You cannot fix Maths without fixing Language. Same systemic factors (teacher quality, parental education, school infrastructure) drive both subjects equally.</div>
 <div style="display:flex;gap:8px;margin-bottom:12px">
-  <button class="fbtn active" id="sc1btn" onclick="showScatter('baseline',this)">2017 vs 2024 — state positions</button>
-  <button class="fbtn" id="sc2btn" onclick="showScatter('covid',this)">COVID drop vs recovery — 4 clusters</button>
-  <button class="fbtn" id="sc3btn" onclick="showScatter('groups',this)">Group performance — convergence?</button>
-  <button class="fbtn" id="sc4btn" onclick="showScatter('lvsm',this)">Language vs Maths — state correlation</button>
+  <button class="fbtn active" id="sc1btn" onclick="showScatter('baseline',this)">2017 vs 2024: state positions</button>
+  <button class="fbtn" id="sc2btn" onclick="showScatter('covid',this)">COVID drop vs recovery: 4 clusters</button>
+  <button class="fbtn" id="sc3btn" onclick="showScatter('groups',this)">Group performance: convergence?</button>
+  <button class="fbtn" id="sc4btn" onclick="showScatter('lvsm',this)">Language vs Maths: state correlation</button>
 </div>
 <div class="card" id="scWrap">
   <div id="scNote" class="ins ins-blue" style="margin-bottom:10px"></div>
@@ -241,7 +241,7 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
 </div>
 
 <hr class="divider">
-<div class="sec">All states — pairwise comparison</div>
+<div class="sec">All states: pairwise comparison</div>
 <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
   <button class="fbtn active" id="pw1btn" onclick="showPairwise('2017v2021',this)">2017 vs 2021 (COVID impact)</button>
   <button class="fbtn" id="pw2btn" onclick="showPairwise('2021v2024',this)">2021 vs 2024 (Recovery)</button>
@@ -253,7 +253,7 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
 </div>
 
 <hr class="divider">
-<div class="sec">Full state data — click column headers to sort</div>
+<div class="sec">Full state data: click column headers to sort</div>
 <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
   <button class="fbtn active" onclick="filterTable('all',this)">All 36 states</button>
   <button class="fbtn" onclick="filterTable('top',this)">Top performers (2024)</button>
@@ -285,33 +285,33 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
 <!-- ══ GROUP GAPS ════════════════════════════════════════════════════════════ -->
 <div class="page" id="page-groups">
 <div style="height:12px"></div>
-<div class="ins ins-amber" style="margin-bottom:14px"><b>Assignment requirement:</b> Compare performance across Gender, School Location, School Management, and Social Groups — across all 3 rounds.</div>
+<div class="ins ins-amber" style="margin-bottom:14px"><b>Assignment requirement:</b> Compare performance across Gender, School Location, School Management, and Social Groups: across all 3 rounds.</div>
 <div class="col2">
-  <div class="card"><h3>Gender — Language % across rounds</h3>
+  <div class="card"><h3>Gender: Language % across rounds</h3>
     <div style="position:relative;height:170px"><canvas id="gG" role="img" aria-label="Gender gap.">Girls: 67.3,63,65. Boys: 66.2,61,63.</canvas></div>
     <div class="ins ins-blue" style="margin-top:8px"><b>Girls consistently lead by 2pp</b> in Language across all 3 rounds. Maths near-parity (both 60% in 2024). In Bihar and some NE states, girls still trail.</div>
   </div>
-  <div class="card"><h3>Social Category — Language % across rounds</h3>
+  <div class="card"><h3>Social Category: Language % across rounds</h3>
     <div style="position:relative;height:170px"><canvas id="gC" role="img" aria-label="Caste gap.">Gen:68,66,67. OBC:66,63,64. SC:64,60,61. ST:62,58,59.</canvas></div>
     <div class="ins ins-red" style="margin-top:8px"><b>SC/ST gap widened:</b> General vs ST was 6pp in 2017, now 8pp in 2024. 15 years of NAS data. Standard interventions are not reaching the most marginalised.</div>
   </div>
-  <div class="card"><h3>School Location — Language % across rounds</h3>
+  <div class="card"><h3>School Location: Language % across rounds</h3>
     <div style="position:relative;height:170px"><canvas id="gL" role="img" aria-label="Location gap.">Rural: 66,61,65. Urban: 67,64,63.</canvas></div>
     <div class="ins ins-green" style="margin-top:8px"><b>2024 reversal:</b> Rural now outperforms urban (65 vs 63). Concentrated NIPUN Bharat FLN programmes in rural blocks were more effective than scattered urban initiatives.</div>
   </div>
-  <div class="card"><h3>School Management — Language % across rounds</h3>
+  <div class="card"><h3>School Management: Language % across rounds</h3>
     <div style="position:relative;height:170px"><canvas id="gM" role="img" aria-label="School type gap.">State Govt:63,60,65. Central:68,67,70. Aided:64,60,63. Private:70,67,64.</canvas></div>
     <div class="ins ins-green" style="margin-top:8px"><b>Private school myth busted:</b> Private fell from 70% (2017) to 64% (2024) while state govt schools rose from 63% to 65%. Structured pedagogy beats resources at Grade 3 level.</div>
   </div>
 </div>
 
-<div class="sec">Recovery by group — 2021 to 2024</div>
+<div class="sec">Recovery by group: 2021 to 2024</div>
 <div class="card"><h3>Who recovered the most? (Left = 2021, Right = 2024)</h3>
   <div id="dbRows"></div>
   <div class="ins ins-red" style="margin-top:10px"><b>Least recovery:</b> ST students gained only 1pp (58→59). Urban schools actually fell (−1pp). Private schools fell (−3pp). <b>Most recovery:</b> State Govt schools +5pp. Rural +4pp. These are the direct effects of NIPUN Bharat targeting.</div>
 </div>
 
-<div class="sec">What Grade 3 children can and cannot do — PRS 2024</div>
+<div class="sec">What Grade 3 children can and cannot do: PRS 2024</div>
 <div class="col2">
   <div class="card"><h3>Maths skills</h3><div id="mSkills"></div></div>
   <div class="card"><h3>Language skills</h3><div id="lSkills"></div></div>
@@ -324,32 +324,32 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
 <div class="sec">The 5 findings that go beyond "COVID caused learning loss"</div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
   <div class="chip"><span class="chip-tag" style="background:#EEDAD3;color:#7A2A20">PARADOX</span>
-    <h4>Recovery is unequal — not just incomplete</h4>
+    <h4>Recovery is unequal: not just incomplete</h4>
     <p>Average score below 2017 + proficiency above 2017 = top half recovered, bottom half fell further. Reporting national averages alone hides this growing inequality.</p>
   </div>
   <div class="chip"><span class="chip-tag" style="background:#DCE5EF;color:#233F63">COUNTERINTUITIVE</span>
     <h4>Punjab went from #28 to #1 in 7 years</h4>
-    <p>Scored 58.7% in 2017 — below national average, ranked near the bottom. Now the top state nationally. The SCERT-DIET teacher data review model is the most replicable success story in this dataset.</p>
+    <p>Scored 58.7% in 2017: below national average, ranked near the bottom. Now the top state nationally. The SCERT-DIET teacher data review model is the most replicable success story in this dataset.</p>
   </div>
   <div class="chip"><span class="chip-tag" style="background:#EEDAD3;color:#7A2A20">STRUCTURAL</span>
     <h4>Maths is classroom-dependent in a way Language is not</h4>
-    <p>Language dropped 4.7pp in COVID. Maths dropped 7.6pp — 61% harder. Children can practice language at home. Maths requires structured procedural practice with a teacher. Any future disruption will hit Maths first.</p>
+    <p>Language dropped 4.7pp in COVID. Maths dropped 7.6pp: 61% harder. Children can practice language at home. Maths requires structured procedural practice with a teacher. Any future disruption will hit Maths first.</p>
   </div>
   <div class="chip"><span class="chip-tag" style="background:#D9E6D9;color:#1F4A34">REVERSAL</span>
-    <h4>Private school advantage — busted at Grade 3</h4>
+    <h4>Private school advantage: busted at Grade 3</h4>
     <p>Private schools led in 2017 (70%) and 2021 (67%). In 2024 they fell to 64% while state govt schools rose to 65%. NIPUN Bharat\'s structured pedagogy outperformed private schools\' resource advantage.</p>
   </div>
   <div class="chip" style="grid-column:span 2"><span class="chip-tag" style="background:#F2E4C2;color:#5C431A">DATA QUALITY</span>
     <h4>The 2017 vs 2024 drop for top states is partly a measurement artefact</h4>
-    <p>Karnataka scored 75.7% in 2017 but only 65% in 2024 — an apparent 10.7pp fall. However, 2017 measured Govt+Aided schools only (which score lower). 2024 added private schools. In states like Karnataka where private schools may score lower than govt schools, this inflates the apparent decline. The real gap is smaller — but how much smaller remains unquantifiable without school-type-specific state data.</p>
+    <p>Karnataka scored 75.7% in 2017 but only 65% in 2024: an apparent 10.7pp fall. However, 2017 measured Govt+Aided schools only (which score lower). 2024 added private schools. In states like Karnataka where private schools may score lower than govt schools, this inflates the apparent decline. The real gap is smaller: but how much smaller remains unquantifiable without school-type-specific state data.</p>
   </div>
 </div>
 
-<div class="sec">6 recommendations — each grounded in specific data</div>
+<div class="sec">6 recommendations: each grounded in specific data</div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
   <div class="chip"><span class="chip-tag" style="background:#EEDAD3;color:#7A2A20">01</span>
     <h4>Target the bottom 35% in Maths separately</h4>
-    <p>Math proficiency is 65% but average is 60%. The top half recovered. Design a targeted remedial Maths programme for below-proficiency children — not just extend NIPUN. <em>Evidence: IRT paradox.</em></p>
+    <p>Math proficiency is 65% but average is 60%. The top half recovered. Design a targeted remedial Maths programme for below-proficiency children: not just extend NIPUN. <em>Evidence: IRT paradox.</em></p>
   </div>
   <div class="chip"><span class="chip-tag" style="background:#DCE5EF;color:#233F63">02</span>
     <h4>Study and replicate the Punjab model</h4>
@@ -369,7 +369,7 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
   </div>
   <div class="chip"><span class="chip-tag" style="background:#D9E6D9;color:#1F4A34">06</span>
     <h4>Design Maths for disruption-resilience</h4>
-    <p>Maths fell 61% harder than Language in COVID because it cannot be practiced at home. Design structured take-home Maths worksheets and parent guidance cards into NIPUN — ready for the next disruption.</p>
+    <p>Maths fell 61% harder than Language in COVID because it cannot be practiced at home. Design structured take-home Maths worksheets and parent guidance cards into NIPUN: ready for the next disruption.</p>
   </div>
 </div>
 </div>
@@ -379,8 +379,8 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
 <div style="height:12px"></div>
 <div style="background:var(--ink);color:#fff;border-radius:12px;padding:20px;margin-bottom:14px">
   <div style="font-size:9px;font-weight:700;color:var(--teal);letter-spacing:.1em;margin-bottom:6px">WHAT IS THIS SURVEY?</div>
-  <h2 style="font-size:18px;font-weight:600;margin-bottom:8px">NAS / PRS — India\'s National Learning Assessment</h2>
-  <p style="font-size:12px;color:#B9BFD9;line-height:1.6">The National Achievement Survey (NAS) and its 2024 successor PARAKH Rashtriya Sarvekshan (PRS) are India\'s largest system-level assessments of student learning. <b style="color:#fff">No individual child receives a score or rank.</b> The survey measures the health of the education system itself — providing district, state, and national evidence for policymakers.</p>
+  <h2 style="font-size:18px;font-weight:600;margin-bottom:8px">NAS / PRS: India\'s National Learning Assessment</h2>
+  <p style="font-size:12px;color:#B9BFD9;line-height:1.6">The National Achievement Survey (NAS) and its 2024 successor PARAKH Rashtriya Sarvekshan (PRS) are India\'s largest system-level assessments of student learning. <b style="color:#fff">No individual child receives a score or rank.</b> The survey measures the health of the education system itself: providing district, state, and national evidence for policymakers.</p>
 </div>
 <div class="col3">
   <div class="card"><b style="font-size:11px;color:var(--gold)">NAS 2017 · 13 Nov 2017</b>
@@ -402,7 +402,7 @@ select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);backgroun
     </ul>
   </div>
 </div>
-<div class="ins ins-amber"><b>Critical:</b> Grade 3 is the ONLY grade directly comparable across all 3 rounds. NAS 2017 excluded private schools; 2021 and 2024 include them. This makes direct comparison approximate — the true COVID drop in like-for-like terms is likely larger than 6.7pp.</div>
+<div class="ins ins-amber"><b>Critical:</b> Grade 3 is the ONLY grade directly comparable across all 3 rounds. NAS 2017 excluded private schools; 2021 and 2024 include them. This makes direct comparison approximate: the true COVID drop in like-for-like terms is likely larger than 6.7pp.</div>
 </div>
 
 <script>
@@ -582,7 +582,7 @@ function loadState(){
 
   // State vs national chart
   if(spChart) spChart.destroy();
-  document.getElementById('spChartTitle').textContent=`${s.n} vs National — Language`;
+  document.getElementById('spChartTitle').textContent=`${s.n} vs National: Language`;
   spChart=new Chart(document.getElementById('spChart'),{type:'line',
     data:{labels:['2017','2021','2024'],datasets:[
       {label:s.n,data:[s.v17,s.l21,s.l24],borderColor:BLUE,pointBackgroundColor:BLUE,borderWidth:2.5,tension:.3,pointRadius:6},
@@ -626,9 +626,9 @@ function showPairwise(type, btn){
   const colors=vals.map(v=>v>=0?GREEN:RED);
 
   const descs={
-    '2017v2021':'COVID Impact: Change in Language % from NAS 2017 to NAS 2021. All states fell. Some fell harder — particularly states that had high 2017 scores under govt-school-only measurement.',
+    '2017v2021':'COVID Impact: Change in Language % from NAS 2017 to NAS 2021. All states fell. Some fell harder: particularly states that had high 2017 scores under govt-school-only measurement.',
     '2021v2024':'Recovery: Change in Language % from NAS 2021 to NAS 2024. States with active NIPUN Bharat implementation (UP, HP, Punjab) show strongest gains.',
-    '2017v2024':'Net change over 7 years: 2017 overall % vs 2024 Language %. States that appear to "fall" should be interpreted carefully — the 2017 scope (govt only) vs 2024 scope (all schools) affects this comparison.',
+    '2017v2024':'Net change over 7 years: 2017 overall % vs 2024 Language %. States that appear to "fall" should be interpreted carefully: the 2017 scope (govt only) vs 2024 scope (all schools) affects this comparison.',
   };
   document.getElementById('pwDesc').innerHTML='<b>Note:</b> '+descs[type];
 
@@ -666,7 +666,7 @@ function buildTable(filter){
       <td>${s.v17.toFixed(1)}</td>
       <td>${s.l21}</td><td>${s.m21}</td><td>${s.l24}</td><td>${s.m24}</td>
       <td>#${s.r17}</td><td>#${s.rL24}</td>
-      <td class="${rc>3?'pos':rc<-3?'neg':''}">${rc>0?'↑'+rc:rc<0?'↓'+Math.abs(rc):'—'}</td>
+      <td class="${rc>3?'pos':rc<-3?'neg':''}">${rc>0?'↑'+rc:rc<0?'↓'+Math.abs(rc):'-'}</td>
       <td class="${vsn>=0?'pos':'neg'}">${vsn>=0?'+':''}${vsn}</td>
       <td class="${s.change1724>=0?'pos':'neg'}">${s.change1724>=0?'+':''}${s.change1724}pp</td>
     </tr>`;
@@ -769,7 +769,7 @@ function showScatter(type, btn){
     baseline:'Each dot = one state. Above diagonal = improved since 2017. Below = fell. States top-right = always strong. States top-left = turnarounds (Punjab, UP). NOTE: states that appear to "fall" (Karnataka, AP) had 2017 govt-only scores; adding private schools in 2024 deflates their average.',
     covid:'X-axis = COVID impact (right = less affected). Y-axis = recovery 2021→2024 (up = stronger recovery). 4 quadrants reveal distinct clusters. Hover any dot to see state name and exact values.',
     groups:'Each dot = a demographic or school type group. Above the no-change diagonal = recovered from 2021. Below = fell further. Private schools fell while State Govt schools rose sharply.',
-    lvsm:'Language vs Maths correlation by state (PRS 2024): r=0.987 — near-perfect correlation. Every state above national in Language is also above in Maths. States cannot have independent Language or Maths problems — the same systemic factors drive both. The L–M gap is 3–5pp uniformly. Reference line shows if both subjects scored equally (y=x line).'
+    lvsm:'Language vs Maths correlation by state (PRS 2024): r=0.987: near-perfect correlation. Every state above national in Language is also above in Maths. States cannot have independent Language or Maths problems: the same systemic factors drive both. The L–M gap is 3–5pp uniformly. Reference line shows if both subjects scored equally (y=x line).'
   };
   document.getElementById('scNote').innerHTML=notes[type];
 
@@ -909,10 +909,10 @@ function buildRegionalNIPUN(){
   // Region stories
   const stories={
     'North':'<b style="color:#3E6B99">North (9 states):</b> Best region in 2024 (65.6% avg). Driven by Punjab (#1 nationally), UP (+13pp). NIPUN concentrated here. Biggest improvement story.',
-    'South':'<b style="color:#2F8F6B">South (6 states):</b> Was best in 2017 (69.3%). Appeared to fall to 63% — but Karnataka/AP declines are partly scope-change artefact. Kerala (68%) is the real benchmark.',
-    'East':'<b style="color:#B8862E">East (4 states):</b> Odisha quietly rose to 65% — a strong performer. Bihar stuck at 61%. WB high in 2017 (72.3%), barely recovered.',
+    'South':'<b style="color:#2F8F6B">South (6 states):</b> Was best in 2017 (69.3%). Appeared to fall to 63%: but Karnataka/AP declines are partly scope-change artefact. Kerala (68%) is the real benchmark.',
+    'East':'<b style="color:#B8862E">East (4 states):</b> Odisha quietly rose to 65%: a strong performer. Bihar stuck at 61%. WB high in 2017 (72.3%), barely recovered.',
     'West':'<b style="color:#5C5490">West (5 states):</b> Maharashtra improving (63%→65%). Gujarat flat. Mixed NIPUN implementation.',
-    'North-East':'<b style="color:#B24A3E">North-East (8 states):</b> Consistently lowest region. Multi-language classroom challenge — children often taught in non-mother-tongue. Manipur surprisingly strong (66%). Arunachal lowest nationally (55%).',
+    'North-East':'<b style="color:#B24A3E">North-East (8 states):</b> Consistently lowest region. Multi-language classroom challenge: children often taught in non-mother-tongue. Manipur surprisingly strong (66%). Arunachal lowest nationally (55%).',
     'Central':'<b style="color:#C97B45">Central (2 states):</b> Both MP and Chhattisgarh improving. Strong NIPUN rollout in both. Quiet recovery.',
     'Islands':'<b style="color:#8B8570">Islands/UTs (2):</b> Small populations, flat trajectory. Limited NIPUN reach.',
   };
@@ -1024,7 +1024,7 @@ const REG_DETAILS = {
       {state:'Karnataka', v17:75.7, l21:65, l24:65, story:'Was #1 nationally in 2017. Apparent −10.7pp fall but MOST of this is scope change: 2017 was govt-only, 2024 adds private schools (which in Karnataka score lower). Real decline is much smaller.', tag:'SCOPE CHANGE', col:'#A97728'},
       {state:'Telangana', v17:68.0, l21:57, l24:60, story:'The real decline in South. Was above national avg (68%) in 2017, now 4pp BELOW (60%). Urban government school structural failure post-bifurcation from AP. Minimal NIPUN rollout. This is a real problem, not a measurement issue.', tag:'GENUINE FALL', col:'#A23B2E'},
       {state:'Andhra Pradesh', v17:75.3, l21:62, l24:61, story:'Largest apparent fall: −14.3pp. But AP\'s 2017 score (75.3%) was under govt-only measurement. Like Karnataka, the decline is substantially a scope change effect. The 2024 fall to 61% partially reflects private school inclusion.', tag:'SCOPE CHANGE', col:'#A97728'},
-      {state:'Tamil Nadu', v17:63.3, l21:60, l24:62, story:'THE PARADOX: One of India\'s most developed states — high HDI, good infrastructure, strong teacher traditions. Yet consistently below national average in all 3 rounds. Likely reason: TN uses its own curriculum framework; NAS tests NCERT Learning Outcomes. Different curriculums = different measurement.', tag:'TN PARADOX', col:'#7A5FA0'},
+      {state:'Tamil Nadu', v17:63.3, l21:60, l24:62, story:'THE PARADOX: One of India\'s most developed states: high HDI, good infrastructure, strong teacher traditions. Yet consistently below national average in all 3 rounds. Likely reason: TN uses its own curriculum framework; NAS tests NCERT Learning Outcomes. Different curriculums = different measurement.', tag:'TN PARADOX', col:'#7A5FA0'},
     ]
   },
   'East': {
@@ -1039,7 +1039,7 @@ const REG_DETAILS = {
     headline: 'East India is defined by contrast: Odisha is the silent achiever; WB fell from a strong position; Bihar seems stuck despite being a focus state.',
     stories: [
       {state:'Odisha', v17:62.0, l21:62, l24:65, story:'The East\'s quiet achiever. Zero COVID drop (unusual). Then +3pp recovery. Now at 65%, above national average. Strong NIPUN implementation, robust monitoring systems, community mobilisation.', tag:'SILENT ACHIEVER', col:'#1F6F5C'},
-      {state:'West Bengal', v17:72.3, l21:62, l24:63, story:'Was a strong state (72.3% in 2017). Fell −10.3pp in COVID — one of the biggest falls nationally. Barely recovered (+1pp). State policy diverged from central NIPUN framework.', tag:'FELL & STUCK', col:'#A23B2E'},
+      {state:'West Bengal', v17:72.3, l21:62, l24:63, story:'Was a strong state (72.3% in 2017). Fell −10.3pp in COVID: one of the biggest falls nationally. Barely recovered (+1pp). State policy diverged from central NIPUN framework.', tag:'FELL & STUCK', col:'#A23B2E'},
       {state:'Bihar', v17:64.3, l21:60, l24:61, story:'Consistently near but below national average across all 3 rounds. High student-teacher ratio. Weak NIPUN implementation monitoring. Infrastructure challenges persist.', tag:'STUCK', col:'#A23B2E'},
     ]
   },
@@ -1052,11 +1052,11 @@ const REG_DETAILS = {
     recBest:    {name:'Manipur',          pp:3},
     aboveNat:   ['Manipur'],
     belowNat:   ['Arunachal Pradesh','Assam','Meghalaya','Mizoram','Nagaland','Sikkim','Tripura'],
-    headline: 'NE has the LARGEST within-region spread: 11pp between Manipur (66%) and Arunachal (55%). A structural challenge — multilingual classrooms — explains most of the persistent underperformance.',
+    headline: 'NE has the LARGEST within-region spread: 11pp between Manipur (66%) and Arunachal (55%). A structural challenge: multilingual classrooms: explains most of the persistent underperformance.',
     stories: [
-      {state:'Manipur', v17:69.7, l21:63, l24:66, story:'The NE surprise. Consistently above regional average, now at 66% — above national average. Strong community school engagement, relatively stable administration, smaller geographic area enables better monitoring.', tag:'NE BRIGHT SPOT', col:'#1F6F5C'},
+      {state:'Manipur', v17:69.7, l21:63, l24:66, story:'The NE surprise. Consistently above regional average, now at 66%: above national average. Strong community school engagement, relatively stable administration, smaller geographic area enables better monitoring.', tag:'NE BRIGHT SPOT', col:'#1F6F5C'},
       {state:'Assam', v17:70.3, l21:61, l24:60, story:'The NE\'s fallen star. Was 70.3% in 2017 (above national avg). By 2024 still falling (−1pp). Was hit hard by COVID (−9.3pp). Administrative challenges, language complexity, and minimal NIPUN rollout combined.', tag:'STILL FALLING', col:'#A23B2E'},
-      {state:'Arunachal Pradesh', v17:49.3, l21:55, l24:55, story:'Lowest state nationally in all 3 rounds. 25+ tribal groups, 50+ dialects. Many children taught in English — a completely foreign language. High teacher vacancy. Remote geography. Needs a fundamentally different approach, not just more training.', tag:'STRUCTURAL CHALLENGE', col:'#A23B2E'},
+      {state:'Arunachal Pradesh', v17:49.3, l21:55, l24:55, story:'Lowest state nationally in all 3 rounds. 25+ tribal groups, 50+ dialects. Many children taught in English: a completely foreign language. High teacher vacancy. Remote geography. Needs a fundamentally different approach, not just more training.', tag:'STRUCTURAL CHALLENGE', col:'#A23B2E'},
     ]
   },
   'West': {
@@ -1068,10 +1068,10 @@ const REG_DETAILS = {
     recBest:    {name:'Maharashtra', pp:2},
     aboveNat:   ['Maharashtra'],
     belowNat:   ['Dadra & NH','Daman & Diu','Gujarat'],
-    headline: 'West India is the "steady recovery" region. Maharashtra is the anchor — consistent NIPUN implementation pulling it back up. Gujarat surprise: flat despite resources.',
+    headline: 'West India is the "steady recovery" region. Maharashtra is the anchor: consistent NIPUN implementation pulling it back up. Gujarat surprise: flat despite resources.',
     stories: [
       {state:'Maharashtra', v17:68.0, l21:63, l24:65, story:'Steady NIPUN rollout. Recovered to 65%, above national average. Mumbai\'s large population means the state average masks significant urban-rural variation internally.', tag:'RECOVERING', col:'#1F6F5C'},
-      {state:'Gujarat', v17:68.0, l21:62, l24:62, story:'Flat across 2021 and 2024. Fell 6pp in COVID, recovered zero. One of India\'s economically strongest states — yet Grade 3 learning is stuck. Moderate NIPUN implementation; private school dominance may dilute govt school focus.', tag:'GUJARAT PARADOX', col:'#A97728'},
+      {state:'Gujarat', v17:68.0, l21:62, l24:62, story:'Flat across 2021 and 2024. Fell 6pp in COVID, recovered zero. One of India\'s economically strongest states: yet Grade 3 learning is stuck. Moderate NIPUN implementation; private school dominance may dilute govt school focus.', tag:'GUJARAT PARADOX', col:'#A97728'},
     ]
   },
   'Central': {
@@ -1165,7 +1165,7 @@ setTimeout(()=>{ if(document.getElementById('regDeepDive')) renderRegionDive('No
 
 
 
-// ══ SCHOOLS MAP TAB — full 3-round dataset (count + % of national total), user-verified ══
+// ══ SCHOOLS MAP TAB: full 3-round dataset (count + % of national total), user-verified ══
 let schoolMapBuilt=false;
 let schoolMapYear='2024';
 const SCHOOLS_3Y=[{"n":"Andhra Pradesh","y17":769,"p17":1.8,"y21":508,"p21":1.8,"y24":1069,"p24":3.9},{"n":"Andaman & Nicobar Islands","y17":180,"p17":0.4,"y21":69,"p21":0.2,"y24":72,"p24":0.3},{"n":"Arunachal Pradesh","y17":988,"p17":2.3,"y21":646,"p21":2.3,"y24":512,"p24":1.8},{"n":"Assam","y17":1621,"p17":3.8,"y21":1183,"p21":4.2,"y24":1085,"p24":3.9},{"n":"Bihar","y17":2266,"p17":5.4,"y21":1232,"p21":4.4,"y24":1248,"p24":4.5},{"n":"Chandigarh","y17":113,"p17":0.3,"y21":34,"p21":0.1,"y24":36,"p24":0.1},{"n":"Chhattisgarh","y17":1563,"p17":3.7,"y21":1156,"p21":4.1,"y24":1190,"p24":4.3},{"n":"Gujarat","y17":2011,"p17":4.8,"y21":1144,"p21":4.1,"y24":1091,"p24":3.9},{"n":"Daman & Diu","y17":44,"p17":0.1,"y21":34,"p21":0.1,"y24":65,"p24":0.2},{"n":"Dadra & Nagar Haveli","y17":253,"p17":0.6,"y21":33,"p21":0.1,"y24":0,"p24":0.0},{"n":"Goa","y17":245,"p17":0.6,"y21":99,"p21":0.4,"y24":94,"p24":0.3},{"n":"Haryana","y17":1256,"p17":3.0,"y21":670,"p21":2.4,"y24":660,"p24":2.4},{"n":"Jammu & Kashmir","y17":1160,"p17":2.8,"y21":921,"p21":3.3,"y24":719,"p24":2.6},{"n":"Ladakh","y17":0,"p17":0.0,"y21":0,"p21":0.0,"y24":45,"p24":0.2},{"n":"Himachal Pradesh","y17":677,"p17":1.6,"y21":512,"p21":1.8,"y24":392,"p24":1.4},{"n":"Jharkhand","y17":1448,"p17":3.4,"y21":991,"p21":3.5,"y24":876,"p24":3.2},{"n":"Karnataka","y17":2029,"p17":4.8,"y21":1653,"p21":5.9,"y24":1359,"p24":4.9},{"n":"Kerala","y17":844,"p17":2.0,"y21":590,"p21":2.1,"y24":602,"p24":2.2},{"n":"Madhya Pradesh","y17":3065,"p17":7.3,"y21":2320,"p21":8.3,"y24":1992,"p24":7.2},{"n":"Lakshadweep","y17":33,"p17":0.1,"y21":12,"p21":0.0,"y24":8,"p24":0.0},{"n":"Maharashtra","y17":2125,"p17":5.0,"y21":1608,"p21":5.7,"y24":1496,"p24":5.4},{"n":"Manipur","y17":481,"p17":1.1,"y21":597,"p21":2.1,"y24":542,"p24":2.0},{"n":"Meghalaya","y17":654,"p17":1.6,"y21":542,"p21":1.9,"y24":514,"p24":1.9},{"n":"NCT of Delhi","y17":527,"p17":1.2,"y21":411,"p21":1.5,"y24":381,"p24":1.4},{"n":"Nagaland","y17":506,"p17":1.2,"y21":327,"p21":1.2,"y24":344,"p24":1.2},{"n":"Mizoram","y17":415,"p17":1.0,"y21":250,"p21":0.9,"y24":296,"p24":1.1},{"n":"Odisha","y17":1477,"p17":3.5,"y21":1270,"p21":4.5,"y24":1115,"p24":4.0},{"n":"Punjab","y17":1338,"p17":3.2,"y21":919,"p21":3.3,"y24":900,"p24":3.2},{"n":"Puducherry","y17":285,"p17":0.7,"y21":116,"p21":0.4,"y24":109,"p24":0.4},{"n":"Rajasthan","y17":2527,"p17":6.0,"y21":1300,"p21":4.6,"y24":1694,"p24":6.1},{"n":"Sikkim","y17":204,"p17":0.5,"y21":152,"p21":0.5,"y24":143,"p24":0.5},{"n":"Tamil Nadu","y17":1723,"p17":4.1,"y21":990,"p21":3.5,"y24":1593,"p24":5.7},{"n":"Telangana","y17":1840,"p17":4.4,"y21":1330,"p21":4.7,"y24":1162,"p24":4.2},{"n":"Tripura","y17":455,"p17":1.1,"y21":282,"p21":1.0,"y24":263,"p24":0.9},{"n":"Uttar Pradesh","y17":4951,"p17":11.7,"y21":2740,"p21":9.8,"y24":2833,"p24":10.2},{"n":"Uttarakhand","y17":783,"p17":1.9,"y21":601,"p21":2.1,"y24":487,"p24":1.8},{"n":"West Bengal","y17":1310,"p17":3.1,"y21":847,"p21":3.0,"y24":754,"p24":2.7}];
@@ -1178,10 +1178,10 @@ function schoolMapKPIs(){
   document.getElementById('smTotal').textContent=SCHOOL_TOTALS[schoolMapYear].toLocaleString();
   document.getElementById('smTotalSub').textContent=`${schoolMapYear==='2017'?'NAS':schoolMapYear==='2021'?'NAS':'PRS'} ${schoolMapYear}, Grade 3, all states & UTs`;
   document.getElementById('smLargest').textContent=sorted[0][yk].toLocaleString();
-  document.getElementById('smLargestSub').textContent=`${sorted[0].n} — ${sorted[0][pk]}% of that year's national sample`;
+  document.getElementById('smLargestSub').textContent=`${sorted[0].n}: ${sorted[0][pk]}% of that year's national sample`;
   const smallest=sorted[sorted.length-1];
   document.getElementById('smSmallest').textContent=smallest[yk].toLocaleString();
-  document.getElementById('smSmallestSub').textContent=`${smallest.n} — ${smallest[pk]}% of that year's national sample`;
+  document.getElementById('smSmallestSub').textContent=`${smallest.n}: ${smallest[pk]}% of that year's national sample`;
 }
 
 function setSchoolMapYear(year,btn){
@@ -1216,7 +1216,7 @@ function drawSchoolBars(){
           tooltip:{callbacks:{label:c=>{
             const s=sorted[c.dataIndex];
             const pk=c.dataset.label==='2017'?'p17':c.dataset.label==='2021'?'p21':'p24';
-            return `${c.dataset.label}: ${c.parsed.x.toLocaleString()} schools — ${s[pk]}% of national sample`;
+            return `${c.dataset.label}: ${c.parsed.x.toLocaleString()} schools: ${s[pk]}% of national sample`;
           }}}},
         scales:{x:{grid,ticks,title:{display:true,text:'Schools sampled, all 3 rounds',color:'#8B8570',font:{size:10}}},
                 y:{grid:{display:false},ticks:{color:'#54503F',font:{size:9.5}}}}}
@@ -1238,7 +1238,7 @@ function drawSchoolBars(){
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{
         const s=sorted[c.dataIndex];
-        return `${s[yk].toLocaleString()} schools  —  ${s[pk]}% of national sample`;
+        return `${s[yk].toLocaleString()} schools :  ${s[pk]}% of national sample`;
       }}}},
       scales:{x:{grid,ticks,title:{display:true,text:`Schools sampled, ${schoolMapYear}`,color:'#8B8570',font:{size:10}}},y:{grid:{display:false},ticks:{color:'#54503F',font:{size:9.5}}}}}
   });
@@ -1259,7 +1259,7 @@ function renderIndiaMap(){
       _indiaMapFailed=true;
       mapEl.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:8px;color:#8B8570;font-size:12px;text-align:center;padding:20px">
         <div style="font-size:26px">🗺️</div>
-        <div>Map tiles need an internet connection to load state boundaries.<br>The bar chart below has the exact same data, sorted and hoverable, for every year — no connection required.</div>
+        <div>Map tiles need an internet connection to load state boundaries.<br>The bar chart below has the exact same data, sorted and hoverable, for every year: no connection required.</div>
       </div>`;
     });
 }
@@ -1354,7 +1354,7 @@ function buildSMRawTable(){
     <td>${SCHOOL_TOTALS['2017'].toLocaleString()}</td><td>100.0</td>
     <td>${SCHOOL_TOTALS['2021'].toLocaleString()}</td><td>100.0</td>
     <td>${SCHOOL_TOTALS['2024'].toLocaleString()}</td><td>100.0</td>
-    <td>—</td>`;
+    <td>-</td>`;
   tb.appendChild(totRow);
 }
 function setSMView(view,btn){
@@ -1402,7 +1402,7 @@ function showSubj21(type,btn){
         scales:{x:{grid:{display:false},ticks},y:{min:40,max:70,grid,ticks:{...ticks,callback:v=>v+'%'}}}}
     });
     insightEl.className='ins ins-red';
-    insightEl.innerHTML='<b>Social category gap holds across all 3 subjects:</b> General leads, ST trails, in Language, Maths, and EVS alike in 2021 — the gap is systemic, not subject-specific.';
+    insightEl.innerHTML='<b>Social category gap holds across all 3 subjects:</b> General leads, ST trails, in Language, Maths, and EVS alike in 2021: the gap is systemic, not subject-specific.';
     return;
   }
 
@@ -1418,9 +1418,9 @@ function showSubj21(type,btn){
       scales:{x:{grid:{display:false},ticks:{...ticks,maxRotation:45,minRotation:45}},y:{min:40,max:75,grid,ticks:{...ticks,callback:v=>v+'%'}}}}
   });
   const notes={
-    lang:'<b>Government Aided led every subgroup in 2017</b> (68.2%) but fell 6.2pp — the steepest drop among school types. Female consistently outperforms Male; OBC fell hardest among social categories (−5.3pp).',
-    math:'<b>Maths fell harder than Language everywhere.</b> Govt Aided dropped 7.9pp. Urban fell more than Rural (−6.8pp vs −5.0pp) — surprising, since urban schools are assumed better-resourced.',
-    evs:'<b>EVS fell hardest of all three subjects</b> (avg −6pp). Govt Aided fell 9.4pp — the single largest subgroup drop anywhere in this dataset. Urban EVS fell more than Rural, reversing the usual pattern.'
+    lang:'<b>Government Aided led every subgroup in 2017</b> (68.2%) but fell 6.2pp: the steepest drop among school types. Female consistently outperforms Male; OBC fell hardest among social categories (−5.3pp).',
+    math:'<b>Maths fell harder than Language everywhere.</b> Govt Aided dropped 7.9pp. Urban fell more than Rural (−6.8pp vs −5.0pp): surprising, since urban schools are assumed better-resourced.',
+    evs:'<b>EVS fell hardest of all three subjects</b> (avg −6pp). Govt Aided fell 9.4pp: the single largest subgroup drop anywhere in this dataset. Urban EVS fell more than Rural, reversing the usual pattern.'
   };
   insightEl.className='ins ins-amber';
   insightEl.innerHTML=notes[type];
@@ -1429,7 +1429,7 @@ function showSubj21(type,btn){
 // ══ LEARNING OUTCOMES TREEMAP TAB ════════════════════════════════════════════
 let treemap21Built=false;
 const LO_DATA={"lang2017":[{"n":"Decoding familiar words","v":74,"status":"Strong"},{"n":"Communication (speaking)","v":70,"status":"Strong"},{"n":"Listening comprehension","v":68,"status":"Strong"},{"n":"Basic reading comprehension","v":65,"status":"Moderate"},{"n":"Word meaning in context","v":62,"status":"Moderate"},{"n":"Written expression","v":58,"status":"WEAK"},{"n":"Inferential comprehension","v":56,"status":"WEAK"}],"lang2021":[{"n":"Decoding familiar words","v":68,"status":"Strong"},{"n":"Communication (speaking)","v":65,"status":"Strong"},{"n":"Listening comprehension","v":63,"status":"Strong"},{"n":"Basic reading comprehension","v":59,"status":"Moderate"},{"n":"Word meaning in context","v":55,"status":"Moderate"},{"n":"Written expression","v":51,"status":"WEAK"},{"n":"Inferential comprehension","v":48,"status":"WEAK"}],"math2017":[{"n":"Number recognition (1-1000)","v":72,"status":"Strong"},{"n":"Basic addition/subtraction","v":68,"status":"Strong"},{"n":"Double-digit arithmetic","v":63,"status":"Moderate"},{"n":"Shapes & geometry","v":61,"status":"Moderate"},{"n":"Money (currency)","v":60,"status":"Moderate"},{"n":"Multiplication (basic)","v":57,"status":"Moderate"},{"n":"Measurement (length/weight)","v":55,"status":"WEAK"},{"n":"Time (clock reading)","v":53,"status":"WEAK"},{"n":"Division (basic)","v":50,"status":"WEAK"},{"n":"Data handling & graphs","v":49,"status":"WEAK"}],"math2021":[{"n":"Number recognition (1-1000)","v":67,"status":"Strong"},{"n":"Basic addition/subtraction","v":62,"status":"Strong"},{"n":"Double-digit arithmetic","v":58,"status":"Moderate"},{"n":"Shapes & geometry","v":55,"status":"Moderate"},{"n":"Money (currency)","v":54,"status":"Moderate"},{"n":"Multiplication (basic)","v":52,"status":"Moderate"},{"n":"Measurement (length/weight)","v":49,"status":"WEAK"},{"n":"Time (clock reading)","v":47,"status":"WEAK"},{"n":"Division (basic)","v":45,"status":"WEAK"},{"n":"Data handling & graphs","v":43,"status":"WEAK"}],"evs2017":[{"n":"Food & water","v":70,"status":"Strong"},{"n":"Family & community","v":68,"status":"Strong"},{"n":"Plants & their uses","v":65,"status":"Moderate"},{"n":"Animals & habitat","v":64,"status":"Moderate"},{"n":"Weather & seasons","v":62,"status":"Moderate"},{"n":"Our surroundings","v":59,"status":"WEAK"},{"n":"Water conservation","v":57,"status":"WEAK"},{"n":"Travel & communication","v":55,"status":"WEAK"}],"evs2021":[{"n":"Food & water","v":65,"status":"Strong"},{"n":"Family & community","v":62,"status":"Strong"},{"n":"Plants & their uses","v":59,"status":"Moderate"},{"n":"Animals & habitat","v":58,"status":"Moderate"},{"n":"Weather & seasons","v":56,"status":"Moderate"},{"n":"Our surroundings","v":53,"status":"WEAK"},{"n":"Water conservation","v":51,"status":"WEAK"},{"n":"Travel & communication","v":49,"status":"WEAK"}],"lang2024":[{"n":"Decoding familiar words","v":70,"status":"Strong"},{"n":"Communication (speaking)","v":67,"status":"Strong"},{"n":"Listening comprehension","v":65,"status":"Strong"},{"n":"Basic reading comprehension","v":61,"status":"Moderate"},{"n":"Word meaning in context","v":57,"status":"Moderate"},{"n":"Written expression","v":53,"status":"WEAK"},{"n":"Inferential comprehension","v":50,"status":"WEAK"}],"math2024":[{"n":"Number recognition (1-1000)","v":70,"status":"Strong"},{"n":"Basic addition/subtraction","v":65,"status":"Strong"},{"n":"Double-digit arithmetic","v":61,"status":"Moderate"},{"n":"Shapes & geometry","v":58,"status":"Moderate"},{"n":"Money (currency)","v":57,"status":"Moderate"},{"n":"Multiplication (basic)","v":55,"status":"Moderate"},{"n":"Measurement (length/weight)","v":52,"status":"WEAK"},{"n":"Time (clock reading)","v":50,"status":"WEAK"},{"n":"Division (basic)","v":48,"status":"WEAK"},{"n":"Data handling & graphs","v":46,"status":"WEAK"}]};
-const LO_TITLES={lang2024:'Language — PRS 2024',lang2021:'Language — NAS 2021',lang2017:'Language — NAS 2017',math2024:'Maths — PRS 2024',math2021:'Maths — NAS 2021',math2017:'Maths — NAS 2017',evs2021:'EVS — NAS 2021',evs2017:'EVS — NAS 2017'};
+const LO_TITLES={lang2024:'Language: PRS 2024',lang2021:'Language: NAS 2021',lang2017:'Language: NAS 2017',math2024:'Maths: PRS 2024',math2021:'Maths: NAS 2021',math2017:'Maths: NAS 2017',evs2021:'EVS: NAS 2021',evs2017:'EVS: NAS 2017'};
 const STATUS_COL={Strong:'#1F6F5C',Moderate:'#A97728',WEAK:'#A23B2E'};
 function showTM21(variant,btn){
   document.querySelectorAll('#tm21Btns .fbtn').forEach(b=>b.classList.remove('active'));
@@ -1437,22 +1437,22 @@ function showTM21(variant,btn){
   const container=document.getElementById('tm21Container');
 
   if(variant==='evs2024'){
-    document.getElementById('tm21Title').textContent='EVS — PRS 2024';
+    document.getElementById('tm21Title').textContent='EVS: PRS 2024';
     document.getElementById('tm21Avg').textContent='';
     container.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:6px;color:#8B8570;font-size:12px;text-align:center;padding:20px">
       <div style="font-size:24px">📋</div>
-      <div><b>EVS was not tested in PRS 2024.</b><br>PRS 2024 covers Language, Mathematics and Science/Social Science under the NEP 2020 Grade 3/6/9 structure — EVS as a standalone subject was retired after NAS 2021. This is a genuine data gap, not a missing chart.</div>
+      <div><b>EVS was not tested in PRS 2024.</b><br>PRS 2024 covers Language, Mathematics and Science/Social Science under the NEP 2020 Grade 3/6/9 structure: EVS as a standalone subject was retired after NAS 2021. This is a genuine data gap, not a missing chart.</div>
     </div>`;
-    document.getElementById('tm21Easy').textContent='—';
-    document.getElementById('tm21Mid').textContent='—';
-    document.getElementById('tm21Hard').textContent='—';
+    document.getElementById('tm21Easy').textContent='-';
+    document.getElementById('tm21Mid').textContent='-';
+    document.getElementById('tm21Hard').textContent='-';
     return;
   }
 
   const data=LO_DATA[variant];
   document.getElementById('tm21Title').textContent=LO_TITLES[variant];
   const avg=(data.reduce((a,b)=>a+b.v,0)/data.length).toFixed(1);
-  document.getElementById('tm21Avg').textContent=`Average across topics: ${avg}%`+(variant.endsWith('2024')?' (2021→2024 topic-level uplift assumed proportional to the national subject-level recovery — see assumptions)':'');
+  document.getElementById('tm21Avg').textContent=`Average across topics: ${avg}%`+(variant.endsWith('2024')?' (2021→2024 topic-level uplift assumed proportional to the national subject-level recovery: see assumptions)':'');
 
   container.innerHTML='';
   const width=container.clientWidth||900, height=460;
@@ -1500,7 +1500,7 @@ function showLODrop21(subj,btn){
   if(isRecovery && subj==='evs'){
     if(window._loChart) window._loChart.destroy();
     const wrap=document.getElementById('loDrop21').parentElement;
-    wrap.innerHTML='<canvas id="loDrop21"></canvas><div style="display:flex;align-items:center;justify-content:center;height:100%;position:absolute;inset:0;color:#8B8570;font-size:12px;text-align:center;padding:20px"><div>EVS was not tested in PRS 2024 — no 2021→2024 comparison is possible for this subject. Try Language or Maths.</div></div>';
+    wrap.innerHTML='<canvas id="loDrop21"></canvas><div style="display:flex;align-items:center;justify-content:center;height:100%;position:absolute;inset:0;color:#8B8570;font-size:12px;text-align:center;padding:20px"><div>EVS was not tested in PRS 2024: no 2021→2024 comparison is possible for this subject. Try Language or Maths.</div></div>';
     document.getElementById('loDrop21Note').textContent='EVS: no 2024 data available (subject retired from PRS after NAS 2021).';
     return;
   }
@@ -1523,12 +1523,12 @@ function showLODrop21(subj,btn){
   const top=rows[0];
   const notesFall={
     lang:`Language: ${top.n} fell most (−${top.drop}pp). Topics needing teacher-guided reasoning (comprehension, expression) fell harder than mechanical skills like decoding.`,
-    math:`Maths: ${top.n} fell most (−${top.drop}pp). Every Maths topic fell by roughly 5–6pp — the most evenly-distributed decline of the three subjects.`,
-    evs:`EVS: ${top.n} fell most (−${top.drop}pp). Nearly every EVS topic dropped exactly 5–6pp — consistent with EVS being the hardest-hit subject overall.`
+    math:`Maths: ${top.n} fell most (−${top.drop}pp). Every Maths topic fell by roughly 5–6pp: the most evenly-distributed decline of the three subjects.`,
+    evs:`EVS: ${top.n} fell most (−${top.drop}pp). Nearly every EVS topic dropped exactly 5–6pp: consistent with EVS being the hardest-hit subject overall.`
   };
   const notesRecover={
-    lang:`Language: ${top.n} recovered most (+${Math.abs(top.drop)}pp) from 2021→2024. Topic-level uplift is assumed proportional to the national subject-level recovery (+2pp) — see assumptions.`,
-    math:`Maths: ${top.n} recovered most (+${Math.abs(top.drop)}pp) from 2021→2024. Topic-level uplift is assumed proportional to the national subject-level recovery (+3pp) — see assumptions.`,
+    lang:`Language: ${top.n} recovered most (+${Math.abs(top.drop)}pp) from 2021→2024. Topic-level uplift is assumed proportional to the national subject-level recovery (+2pp): see assumptions.`,
+    math:`Maths: ${top.n} recovered most (+${Math.abs(top.drop)}pp) from 2021→2024. Topic-level uplift is assumed proportional to the national subject-level recovery (+3pp): see assumptions.`,
   };
   document.getElementById('loDrop21Note').textContent=isRecovery?notesRecover[subj]:notesFall[subj];
 }
@@ -1553,7 +1553,7 @@ new Chart(document.getElementById('trendProj'),{type:'line',
 <!-- ══ SCHOOLS MAP ══════════════════════════════════════════════════════════ -->
 <div class="page" id="page-schoolmap">
 <div style="height:12px"></div>
-<div class="ins ins-blue" style="margin-bottom:12px"><b>What this % means:</b> these are NOT performance scores. They show each state's <b>share of the national school sample</b> that round — i.e. sampling weight, driven mainly by how many schools a state has. A state's % can shift between rounds even if nothing changed about its schools, simply because PARAKH changed how many schools it sampled nationally (42,166 in 2017 → 28,089 in 2021 → 27,741 in 2024).</div>
+<div class="ins ins-blue" style="margin-bottom:12px"><b>What this % means:</b> these are NOT performance scores. They show each state's <b>share of the national school sample</b> that round: i.e. sampling weight, driven mainly by how many schools a state has. A state's % can shift between rounds even if nothing changed about its schools, simply because PARAKH changed how many schools it sampled nationally (42,166 in 2017 → 28,089 in 2021 → 27,741 in 2024).</div>
 <div style="display:flex;gap:8px;margin-bottom:14px" id="smYearBtns">
   <button class="fbtn" onclick="setSchoolMapYear('2017',this)">2017</button>
   <button class="fbtn" onclick="setSchoolMapYear('2021',this)">2021</button>
@@ -1561,19 +1561,19 @@ new Chart(document.getElementById('trendProj'),{type:'line',
 </div>
 <div class="col3">
   <div class="kpi" style="border-top:3px solid var(--teal)"><div class="yr">TOTAL SCHOOLS SAMPLED</div><div class="num" id="smTotal">27,741</div><div class="sub" id="smTotalSub">PRS 2024, Grade 3, all states & UTs</div></div>
-  <div class="kpi" style="border-top:3px solid var(--blue)"><div class="yr">LARGEST SAMPLE</div><div class="num" id="smLargest">2,833</div><div class="sub" id="smLargestSub">Uttar Pradesh — 10.2% of national sample</div></div>
-  <div class="kpi" style="border-top:3px solid var(--g5)"><div class="yr">SMALLEST SAMPLE</div><div class="num" id="smSmallest">8</div><div class="sub" id="smSmallestSub">Lakshadweep — 0.0% of national sample</div></div>
+  <div class="kpi" style="border-top:3px solid var(--blue)"><div class="yr">LARGEST SAMPLE</div><div class="num" id="smLargest">2,833</div><div class="sub" id="smLargestSub">Uttar Pradesh: 10.2% of national sample</div></div>
+  <div class="kpi" style="border-top:3px solid var(--g5)"><div class="yr">SMALLEST SAMPLE</div><div class="num" id="smSmallest">8</div><div class="sub" id="smSmallestSub">Lakshadweep: 0.0% of national sample</div></div>
 </div>
 <div class="card">
-  <h3 style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">India — Schools Sampled by State · Hover any state for count</h3>
-  <div style="font-size:11px;color:#54503F;margin-bottom:10px">Dark green = more schools sampled · Light = fewer · Map requires internet connection to render state boundaries — the bar chart below always works.</div>
+  <h3 style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">India: Schools Sampled by State · Hover any state for count</h3>
+  <div style="font-size:11px;color:#54503F;margin-bottom:10px">Dark green = more schools sampled · Light = fewer · Map requires internet connection to render state boundaries: the bar chart below always works.</div>
   <div style="display:flex;gap:8px;margin-bottom:10px" id="smViewBtns">
     <button class="fbtn active" id="smViewMapBtn" onclick="setSMView('map',this)">🗺 Map view</button>
     <button class="fbtn" id="smViewTableBtn" onclick="setSMView('table',this)">📋 Table view (raw data)</button>
   </div>
   <div id="indiaMapMain" style="height:500px;background:#F2EFE6;border-radius:8px;overflow:hidden;position:relative"></div>
   <div id="smTableWrap" style="display:none">
-    <div class="ins ins-blue" style="margin-bottom:10px"><b>Use this to cross-check the map:</b> if a state looks blank or unfilled on the map view, its exact numbers are still here — every state and UT, all 3 rounds, side by side.</div>
+    <div class="ins ins-blue" style="margin-bottom:10px"><b>Use this to cross-check the map:</b> if a state looks blank or unfilled on the map view, its exact numbers are still here: every state and UT, all 3 rounds, side by side.</div>
     <div style="max-height:560px;overflow:auto;border:1px solid var(--g2);border-radius:6px">
     <table id="smRawTable">
       <thead><tr>
@@ -1594,15 +1594,15 @@ new Chart(document.getElementById('trendProj'),{type:'line',
     </table>
     </div>
   </div>
-  <div class="ins ins-blue" style="margin-top:10px"><b>Sampling design:</b> School count is roughly proportional to each state's total number of registered schools — not performance. Large states (UP, MP, Karnataka) get large samples every round. Small UTs (Lakshadweep, Dadra & Nagar Haveli) reflect actual school availability, which is why Dadra & Nagar Haveli shows 0 sampled schools in 2024 in the source data. Source: PARAKH NAS/PRS official state sampling tables, all 3 rounds.</div>
-  <div class="ins ins-amber" style="margin-top:10px"><b>Limitation — this is schools sampled, not schools that exist:</b> everything above shows how many schools were <i>picked for testing</i>, not each state's actual school base. A real "was any state over/under-sampled?" answer needs two things this dataset doesn't have: (1) each state's total school count, ideally split by Govt / Aided / Private, to check if sample share tracks school share; and (2) district-level sampling counts, to check if the sample was spread evenly or concentrated in a few districts within a state. Without those, the map/table here can show <i>where</i> sampling was heavy, but not <i>whether</i> it was proportionate.</div>
+  <div class="ins ins-blue" style="margin-top:10px"><b>Sampling design:</b> School count is roughly proportional to each state's total number of registered schools: not performance. Large states (UP, MP, Karnataka) get large samples every round. Small UTs (Lakshadweep, Dadra & Nagar Haveli) reflect actual school availability, which is why Dadra & Nagar Haveli shows 0 sampled schools in 2024 in the source data. Source: PARAKH NAS/PRS official state sampling tables, all 3 rounds.</div>
+  <div class="ins ins-amber" style="margin-top:10px"><b>Limitation: this is schools sampled, not schools that exist:</b> everything above shows how many schools were <i>picked for testing</i>, not each state's actual school base. A real "was any state over/under-sampled?" answer needs two things this dataset doesn't have: (1) each state's total school count, ideally split by Govt / Aided / Private, to check if sample share tracks school share; and (2) district-level sampling counts, to check if the sample was spread evenly or concentrated in a few districts within a state. Without those, the map/table here can show <i>where</i> sampling was heavy, but not <i>whether</i> it was proportionate.</div>
 </div>
-<div class="sec">All states — schools sampled</div>
+<div class="sec">All states: schools sampled</div>
 <div class="card">
 
   <div style="display:flex;gap:8px;margin-bottom:12px" id="sbViewBtns">
     <button class="fbtn active" id="sbViewYearBtn" onclick="setSBView('year',this)">Selected year (sorted by count)</button>
-    <button class="fbtn" id="sbViewAllBtn" onclick="setSBView('all',this)">All 3 years — side by side</button>
+    <button class="fbtn" id="sbViewAllBtn" onclick="setSBView('all',this)">All 3 years: side by side</button>
   </div>
   <div style="position:relative;height:640px"><canvas id="schoolBars" role="img" aria-label="Schools sampled by state.">Schools sampled by state.</canvas></div>
 </div>
@@ -1611,7 +1611,7 @@ new Chart(document.getElementById('trendProj'),{type:'line',
 <!-- ══ SUBJECTS 2017→2021 ═══════════════════════════════════════════════════ -->
 <div class="page" id="page-subjects21">
 <div style="height:12px"></div>
-<div class="ins ins-amber" style="margin-bottom:14px"><b>Real data:</b> Every value on this page is from the official PARAKH NAS 2021 dashboard data. National average % for Grade 3 by subgroup — Language, Mathematics, EVS.</div>
+<div class="ins ins-amber" style="margin-bottom:14px"><b>Real data:</b> Every value on this page is from the official PARAKH NAS 2021 dashboard data. National average % for Grade 3 by subgroup: Language, Mathematics, EVS.</div>
 <div class="col3">
   <div class="kpi" style="border-top:3px solid var(--red)"><div class="yr">LANGUAGE FELL</div><div class="num" style="color:var(--red)">−4.8pp</div><div class="sub">66.5% avg (2017) → 61.7% avg (2021)</div></div>
   <div class="kpi" style="border-top:3px solid var(--red)"><div class="yr">MATHS FELL</div><div class="num" style="color:var(--red)">−5.8pp</div><div class="sub">63.1% avg (2017) → 57.3% avg (2021)</div></div>
@@ -1622,7 +1622,7 @@ new Chart(document.getElementById('trendProj'),{type:'line',
   <button class="fbtn active" id="s21b1" onclick="showSubj21('lang',this)">Language</button>
   <button class="fbtn" id="s21b2" onclick="showSubj21('math',this)">Maths</button>
   <button class="fbtn" id="s21b3" onclick="showSubj21('evs',this)">EVS</button>
-  <button class="fbtn" id="s21b4" onclick="showSubj21('social',this)">Social Category — all 3 subjects</button>
+  <button class="fbtn" id="s21b4" onclick="showSubj21('social',this)">Social Category: all 3 subjects</button>
 </div>
 
 <div class="card" id="s21Card">
@@ -1634,10 +1634,10 @@ new Chart(document.getElementById('trendProj'),{type:'line',
 <div class="sec">Key findings from the data</div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
   <div class="ins ins-red" style="margin:0"><b>EVS fell hardest (−6pp avg).</b> Language practiced at home; EVS and Maths require school structure. COVID\'s effect is directly visible in subject-level differences.</div>
-  <div class="ins ins-purp" style="margin:0"><b>Govt Aided was BEST in 2017.</b> Language 68.2%, Maths 64.9%, EVS 67.4% — highest of ALL school types. Yet fell heavily in 2021.</div>
-  <div class="ins ins-red" style="margin:0"><b>Central Govt scored LOWEST in 2021.</b> Language 56%, Maths 52%. Expected to be highest. Many Central Govt schools are residential — COVID completely disrupted boarding arrangements.</div>
-  <div class="ins ins-amber" style="margin:0"><b>Girls led in BOTH Language and Maths in 2017.</b> Language: 67.4 vs 65.9 (boys). Maths: 63.2 vs 62.7. By 2021 both genders equal — girls' advantage erased by COVID.</div>
-  <div class="ins ins-amber" style="margin:0"><b>OBC fell most in Language (−5.3pp).</b> OBC: 67.3→62.0. SC fell least (−3.6pp): 65.6→62.0. SC was already lower — less room to fall. Different groups had different COVID buffers.</div>
+  <div class="ins ins-purp" style="margin:0"><b>Govt Aided was BEST in 2017.</b> Language 68.2%, Maths 64.9%, EVS 67.4%: highest of ALL school types. Yet fell heavily in 2021.</div>
+  <div class="ins ins-red" style="margin:0"><b>Central Govt scored LOWEST in 2021.</b> Language 56%, Maths 52%. Expected to be highest. Many Central Govt schools are residential: COVID completely disrupted boarding arrangements.</div>
+  <div class="ins ins-amber" style="margin:0"><b>Girls led in BOTH Language and Maths in 2017.</b> Language: 67.4 vs 65.9 (boys). Maths: 63.2 vs 62.7. By 2021 both genders equal: girls' advantage erased by COVID.</div>
+  <div class="ins ins-amber" style="margin:0"><b>OBC fell most in Language (−5.3pp).</b> OBC: 67.3→62.0. SC fell least (−3.6pp): 65.6→62.0. SC was already lower: less room to fall. Different groups had different COVID buffers.</div>
   <div class="ins ins-blue" style="margin:0"><b>Rural slightly led Urban in Language 2017</b> (66.8 vs 66.2). In EVS, Urban led (64.4 vs 63.6). Rural students read in home language; urban EVS knowledge is broader.</div>
 </div>
 </div>
@@ -1645,7 +1645,7 @@ new Chart(document.getElementById('trendProj'),{type:'line',
 <!-- ══ LEARNING OUTCOMES TREEMAP ═════════════════════════════════════════════ -->
 <div class="page" id="page-treemap21">
 <div style="height:12px"></div>
-<div class="ins ins-amber" style="margin-bottom:14px"><b>Data note:</b> Learning outcome % from NCERT NAS 2021 National Report (Class 3) and NAS 2017 NRC — published competency data. Not from the subject-level source data (which only covers overall subject scores). Box size = relative importance. Colour: 🔴 Red = hardest → 🟢 Dark green = easiest. Hover for priority guidance.</div>
+<div class="ins ins-amber" style="margin-bottom:14px"><b>Data note:</b> Learning outcome % from NCERT NAS 2021 National Report (Class 3) and NAS 2017 NRC: published competency data. Not from the subject-level source data (which only covers overall subject scores). Box size = relative importance. Colour: 🔴 Red = hardest → 🟢 Dark green = easiest. Hover for priority guidance.</div>
 
 <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap" id="tm21Btns">
   <button class="fbtn active" onclick="showTM21('lang2024',this)">Language 2024</button>
@@ -1660,15 +1660,15 @@ new Chart(document.getElementById('trendProj'),{type:'line',
 </div>
 
 <div class="card" style="padding:10px 15px;margin-bottom:8px">
-  <span id="tm21Title" style="font-size:14px;font-weight:700;color:var(--navy)">Language — NAS 2021</span>
+  <span id="tm21Title" style="font-size:14px;font-weight:700;color:var(--navy)">Language: NAS 2021</span>
   <span id="tm21Avg" style="font-size:12px;color:var(--g5);margin-left:12px"></span>
 </div>
 <div id="tm21Container" style="width:100%;height:460px;background:#fff;border-radius:12px;overflow:hidden;position:relative"></div>
 
 <div class="col3" style="margin-top:12px">
-  <div class="ins ins-green" style="margin:0"><b>🟢 Easiest — maintain</b><div id="tm21Easy" style="margin-top:4px;font-size:11px"></div></div>
-  <div class="ins ins-amber" style="margin:0"><b>🟡 Moderate — reinforce</b><div id="tm21Mid" style="margin-top:4px;font-size:11px"></div></div>
-  <div class="ins ins-red" style="margin:0"><b>🔴 Weakest — priority for next training</b><div id="tm21Hard" style="margin-top:4px;font-size:11px"></div></div>
+  <div class="ins ins-green" style="margin:0"><b>🟢 Easiest: maintain</b><div id="tm21Easy" style="margin-top:4px;font-size:11px"></div></div>
+  <div class="ins ins-amber" style="margin:0"><b>🟡 Moderate: reinforce</b><div id="tm21Mid" style="margin-top:4px;font-size:11px"></div></div>
+  <div class="ins ins-red" style="margin:0"><b>🔴 Weakest: priority for next training</b><div id="tm21Hard" style="margin-top:4px;font-size:11px"></div></div>
 </div>
 
 <div class="sec" style="margin-top:16px">Which topics changed most? (choose round, then subject)</div>
