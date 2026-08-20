@@ -4,6 +4,8 @@ An interactive dashboard analyzing India's Grade 3 student learning outcomes acr
 
 **[View the live dashboard →](https://ipsy05.github.io/nas-prs-dashboard/)**
 
+![Overview page showing national trends, subject comparison, and IRT proficiency](screenshots/overview.png)
+
 ## What this is
 
 NAS (National Achievement Survey) and PRS (PARAKH Rashtriya Sarvekshan) are India's largest system-level assessments of student learning outcomes, conducted by NCERT/PARAKH. They are not student exams; no child receives an individual score. Results are reported at the district, state, and national level, and are used to guide programs like NIPUN Bharat, teacher training, and budget allocation. Grade 3 is the only grade tested in a comparable format across all three rounds (2017, 2021, 2024), which makes it the sole basis for a genuine longitudinal comparison.
@@ -19,6 +21,16 @@ This project pulls together publicly available NAS/PRS data across the three rou
 - **Maths fell harder than Language during COVID** (-7.6pp vs -4.7pp): Language can be practiced informally at home; Maths generally needs structured, teacher-led practice.
 - **Punjab: #28 to #1.** The clearest replicable success story in the data: a sustained SCERT-DIET partnership model with teacher-led data review cycles took Punjab from bottom-third to the top-ranked state in Language over 7 years.
 - Language and Maths scores move together almost perfectly across states (r = 0.987). No state outperforms nationally in one subject while lagging in the other, suggesting shared systemic drivers.
+
+### Schools sampled by state
+
+![Map of schools sampled by state, PRS 2024](screenshots/schools-sampled-map.png)
+
+### State-level drill-down
+
+Explore any state's trajectory across all three rounds, with pairwise comparisons and correlation analysis:
+
+![State analysis view with Andaman & Nicobar example and language-vs-maths correlation scatter](screenshots/state-analysis.png)
 
 ## Recommendations
 
