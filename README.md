@@ -2,7 +2,7 @@
 
 An interactive dashboard analyzing India's Grade 3 student learning outcomes across three national assessment rounds: **NAS 2017**, **NAS 2021**, and **PRS 2024**, at the national and state level.
 
-**[View the live dashboard →](#)** *(link will work once GitHub Pages is enabled; see setup below)*
+**[View the live dashboard →](https://ipsy05.github.io/nas-prs-dashboard/)**
 
 ## What this is
 
