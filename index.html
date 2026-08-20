@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>India Grade 3 — NAS/PRS Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#28315A;--blue:#3E6B99;--teal:#1F6F5C;--gold:#A97728;--red:#A23B2E;--purp:#6B5490;
+  --wh:#fff;--off:#F2EFE6;--g1:#EAE4D4;--g2:#D9D2BE;--g5:#8B8570;--ink:#1C2135;--inks:#54503F;
+  --serif:'Fraunces',Georgia,serif;--sans:'IBM Plex Sans',Arial,sans-serif;--mono:'IBM Plex Mono',Menlo,monospace;
+}
+body{
+  font-family:var(--sans);background:var(--off);color:var(--ink);font-size:13px;
+  background-image:repeating-linear-gradient(180deg,rgba(28,33,53,0.028) 0px,rgba(28,33,53,0.028) 1px,transparent 1px,transparent 27px);
+}
+h1,h2,h3,h4{font-family:var(--serif)}
+.topbar{background:var(--ink);padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;height:52px;border-bottom:3px double var(--gold)}
+.brand{color:#fff;font-family:var(--serif);font-size:15px;font-weight:600;letter-spacing:.01em;display:flex;align-items:center;gap:9px}
+.brand::before{content:'◉';color:var(--gold);font-size:13px}
+.brand span{color:#9FD7C3;font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.02em}
+.tabs{display:flex}
+.tab{padding:0 14px;height:52px;display:flex;align-items:center;font-size:11.5px;font-weight:600;color:#8790AC;cursor:pointer;border-bottom:3px solid transparent;transition:.15s;white-space:nowrap;letter-spacing:.01em}
+.tab.active,.tab:hover{color:#fff;border-bottom-color:var(--gold)}.tab.active{color:#F0D8A8}
+.page{display:none;padding:18px 20px 48px;max-width:1000px;margin:0 auto}.page.active{display:block;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.col2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.col3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.col4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.card{background:var(--wh);border:1px solid var(--g2);border-radius:6px;padding:15px 17px;margin-bottom:12px;box-shadow:0 1px 2px rgba(28,33,53,.04)}
+.card h3{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px;letter-spacing:.01em}
+.sec{font-family:var(--serif);font-size:13px;font-weight:600;font-style:italic;color:var(--navy);margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--g2)}
+.kpi{background:var(--wh);border:1px solid var(--g2);border-radius:6px;padding:14px 16px 16px;position:relative;overflow:hidden}
+.kpi::after{content:'';position:absolute;top:9px;right:9px;width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.35}
+.kpi .yr{font-size:9.5px;color:var(--g5);margin-bottom:5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+.kpi .num{font-family:var(--mono);font-size:27px;font-weight:600;color:var(--navy);line-height:1}
+.kpi .sub{font-size:10px;color:var(--g5);margin-top:4px}
+.kpi .badge{display:inline-block;margin-top:8px;padding:3px 9px;border-radius:3px;font-size:9.5px;font-weight:700}
+.b-gray{background:var(--g1);color:var(--inks)}.b-red{background:#EEDAD3;color:#7A2A20}.b-grn{background:#D9E6D9;color:#1F4A34}
+.ins{border-radius:4px;padding:9px 13px;font-size:11.5px;line-height:1.55;margin:10px 0}
+.ins-amber{background:#F2E4C2;border-left:3px solid var(--gold);color:#5C431A}
+.ins-green{background:#DAE7DB;border-left:3px solid var(--teal);color:#1B4230}
+.ins-red{background:#EEDAD3;border-left:3px solid var(--red);color:#6E2A20}
+.ins-blue{background:#DCE5EF;border-left:3px solid var(--blue);color:#233F63}
+.ins-gold{background:#F2E4C2;border-left:3px solid var(--gold);color:#5C431A}
+.ins-purp{background:#E4DCEC;border-left:3px solid var(--purp);color:#4A3A66}
+.fbtn{padding:5px 13px;border-radius:3px;border:1.3px solid var(--g2);background:var(--wh);cursor:pointer;font-size:11px;font-weight:600;color:var(--inks);transition:.15s}
+.fbtn.active,.fbtn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+.skill-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.skill-lbl{font-size:11px;color:var(--inks);width:190px;flex-shrink:0}
+.skill-track{flex:1;background:var(--g1);border-radius:3px;height:9px;overflow:hidden}
+.skill-fill{height:100%;border-radius:3px}
+.skill-pct{font-family:var(--mono);font-size:11px;font-weight:600;width:34px;text-align:right;flex-shrink:0}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{background:var(--navy);color:#fff;padding:8px 9px;text-align:center;font-size:10.5px;font-weight:600;letter-spacing:.02em;cursor:pointer;user-select:none;white-space:nowrap}
+th:first-child{text-align:left}
+th:hover{background:#374372}
+td{padding:6px 9px;border-bottom:1px solid var(--g1);font-family:var(--mono);font-size:11px}
+td:first-child{font-family:var(--sans);font-size:11.5px}
+td:not(:first-child){text-align:center}
+tr:nth-child(even) td{background:var(--g1)}
+tr:hover td{background:#E8E0CC}
+.pos{color:#1F4A34;font-weight:700}.neg{color:#7A2A20;font-weight:700}.nat{color:var(--gold);font-weight:700}
+.chip{background:var(--wh);border:1px solid var(--g2);border-radius:5px;padding:13px 15px}
+.chip h4{font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.chip p{font-size:11px;color:var(--inks);line-height:1.55}
+.chip-tag{display:inline-block;padding:2px 9px;border-radius:3px;font-size:9px;font-weight:700;letter-spacing:.03em;margin-bottom:6px}
+.state-profile{background:var(--wh);border:1px solid var(--g2);border-radius:6px;padding:16px;margin-bottom:12px}
+.sp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--g2)}
+.sp-name{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--navy)}
+.sp-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.sp-cell{background:var(--g1);border-radius:4px;padding:9px 10px;text-align:center}
+.sp-cell .sc-yr{font-size:9px;color:var(--g5);font-weight:700;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.sp-cell .sc-val{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--navy)}
+.sp-cell .sc-rank{font-size:9px;color:var(--g5);margin-top:2px}
+.sp-cell .sc-vs{font-size:10px;font-weight:700;margin-top:2px}
+.note{font-size:10px;color:var(--g5);font-style:italic;margin-top:10px;line-height:1.5}
+select{padding:7px 12px;border-radius:4px;border:1.3px solid var(--g2);background:var(--wh);font-size:12px;font-weight:600;color:var(--navy);cursor:pointer;min-width:200px}
+.rank-badge{display:inline-block;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:700;text-align:center;line-height:22px;flex-shrink:0}
+.divider{border:none;border-top:1px solid var(--g2);margin:20px 0}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px;font-size:11px;color:var(--inks)}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0}
+@media(max-width:760px){
+  .col2,.col3,.col4{grid-template-columns:1fr}
+  .sp-grid{grid-template-columns:repeat(2,1fr)}
+  .tabs{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">India Grade 3 — <span>NAS 2017 · NAS 2021 · PRS 2024</span></div>
+  <div class="tabs">
+    <div class="tab active" onclick="go('overview',this)">Overview</div>
+    <div class="tab" onclick="go('states',this)">State Analysis</div>
+    <div class="tab" onclick="go('groups',this)">Group Gaps</div>
+    <div class="tab" onclick="go('treemap21',this)">🌳 Learning Outcomes</div>
+    <div class="tab" onclick="go('schoolmap',this)">🗺 Schools Map</div>
+    <div class="tab" onclick="go('subjects21',this)">📊 2017→2021</div>
+    <div class="tab" onclick="go('insights',this)">Insights</div>
+    <div class="tab" onclick="go('about',this)">About NAS/PRS</div>
+  </div>
+</div>
+
+<!-- ══ OVERVIEW ══════════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-overview">
+<div style="height:12px"></div>
+<div class="col3">
+  <div class="kpi" style="border-top:3px solid var(--gold)">
+    <div class="yr">NAS 2017 — BASELINE</div><div class="num">65.7%</div>
+    <div class="sub">Language + Math avg | Govt+Aided only</div>
+    <span class="badge b-gray">Starting point</span>
+  </div>
+  <div class="kpi" style="border-top:3px solid var(--red)">
+    <div class="yr">NAS 2021 — COVID YEAR</div><div class="num">59.0%</div>
+    <div class="sub">Language + Math + EVS avg | All schools</div>
+    <span class="badge b-red">▼ 6.7 pp — biggest ever drop</span>
+  </div>
+  <div class="kpi" style="border-top:3px solid var(--teal)">
+    <div class="yr">PRS 2024 — TODAY</div><div class="num">62.0%</div>
+    <div class="sub">Language + Math avg | All schools</div>
+    <span class="badge b-grn">▲ 3 pp recovery · Still 3.7pp below 2017</span>
+  </div>
+</div>
+
+<div class="col2">
+  <div class="card"><h3>National trend — Language & Math (%)</h3>
+    <div style="position:relative;height:200px"><canvas id="ov1" role="img" aria-label="Trend">Language: 66.7, 62, 64. Math: 64.6, 57, 60.</canvas></div>
+    <div class="ins ins-red" style="margin-top:10px"><b>The IRT paradox:</b> Average score still below 2017, but <em>more</em> children now reach proficiency (Lang: 47%→57%, Math: 53%→65%). Top half recovered fast; bottom half still behind.</div>
+  </div>
+  <div class="card"><h3>Subject comparison — all 3 rounds</h3>
+    <div style="position:relative;height:200px"><canvas id="ov2" role="img" aria-label="Subject">Lang and Math by year.</canvas></div>
+    <div class="ins ins-amber" style="margin-top:10px"><b>Maths is the bigger problem:</b> Dropped 7.6pp in COVID (vs Language\'s 4.7pp). Still 4.6pp below 2017. Maths requires classroom instruction — it cannot be self-studied at home.</div>
+  </div>
+</div>
+
+<div class="col2">
+  <div class="card"><h3>IRT proficiency — % children meeting minimum standard</h3>
+    <div style="position:relative;height:180px"><canvas id="ov3" role="img" aria-label="IRT">IRT: Lang 47,39,57. Math 53,42,65.</canvas></div>
+    <p style="font-size:10px;color:var(--g5);margin-top:6px">Note: Methodology changed between rounds — use directionally. The gap between falling averages and rising proficiency reveals a widening inequality within states.</p>
+  </div>
+  <div class="card"><h3>What changed between 2021 and 2024?</h3>
+    <div id="recoveryRows"></div>
+    <div class="ins ins-green" style="margin-top:8px"><b>State Govt schools recovered most (+5pp)</b> — NIPUN Bharat concentrated teacher training and TLM in government schools. Private schools actually fell (−3pp).</div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:12px">
+  <h3>Trend projection — when does India return to 2017 levels?</h3>
+  <div style="position:relative;height:200px"><canvas id="trendProj" role="img" aria-label="Projection chart showing Language and Math recovery trends to 2017 baseline. Language: 2028, Math: 2029 at current rate.">Projection: Language baseline restored 2028, Maths 2029 at current rate. Optimistic: 2026. Pessimistic: 2032+.</canvas></div>
+  <div class="ins ins-amber" style="margin-top:8px"><b>At current recovery rate</b> (+2pp/3yr Language, +3pp/3yr Maths): Language reaches 2017 baseline (~66.7%) by <b>2028</b>. Maths reaches 2017 baseline (~64.6%) by <b>2029</b>. If NIPUN scales to 2x pace: 2026. If any disruption: 2032+. This projection assumes no policy reversal, no school closures, and NIPUN Bharat continues at current intensity.</div>
+</div>
+<p class="note" style="padding:0 4px">Assumptions: 2017 = Govt+Aided only; 2021 & 2024 include private schools (comparison is approximate). 2021 IRT scores (0–500) ÷5. Sources: PIB (2018), NCERT NAS 2021 NRC, PARAKH PRS 2024 NRC, CSF (2025).</p>
+</div>
+
+<!-- ══ STATE ANALYSIS ════════════════════════════════════════════════════════ -->
+<div class="page" id="page-states">
+<div style="height:12px"></div>
+
+<div class="sec">Explore any state</div>
+<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap">
+  <select id="stateSelect" onchange="loadState()">
+    <option value="">— Select a state / UT —</option>
+  </select>
+  <span style="font-size:11px;color:var(--g5)">National averages: 2017=65.7% · 2021 Lang=62% · 2024 Lang=64%</span>
+</div>
+
+<div id="stateProfile" style="display:none">
+  <div class="state-profile">
+    <div class="sp-header">
+      <div><span id="spName" class="sp-name"></span>
+        <span id="spRegion" style="font-size:11px;color:var(--g5);margin-left:10px"></span>
+      </div>
+      <div id="spTrajectory" style="font-size:12px;font-weight:700"></div>
+    </div>
+    <div class="sp-grid">
+      <div class="sp-cell">
+        <div class="sc-yr">2017 Overall</div>
+        <div class="sc-val" id="sp17"></div>
+        <div class="sc-rank" id="spR17"></div>
+        <div class="sc-vs" id="spVs17"></div>
+      </div>
+      <div class="sp-cell">
+        <div class="sc-yr">2021 Language</div>
+        <div class="sc-val" id="sp21L"></div>
+        <div class="sc-rank" id="spR21L"></div>
+        <div class="sc-vs" id="spVs21L"></div>
+      </div>
+      <div class="sp-cell">
+        <div class="sc-yr">2021 Maths</div>
+        <div class="sc-val" id="sp21M"></div>
+        <div class="sc-rank" id="spR21M"></div>
+        <div class="sc-vs" id="spVs21M"></div>
+      </div>
+      <div class="sp-cell">
+        <div class="sc-yr">2024 Language</div>
+        <div class="sc-val" id="sp24L"></div>
+        <div class="sc-rank" id="spR24L"></div>
+        <div class="sc-vs" id="spVs24L"></div>
+      </div>
+      <div class="sp-cell">
+        <div class="sc-yr">2024 Maths</div>
+        <div class="sc-val" id="sp24M"></div>
+        <div class="sc-rank" id="spR24M"></div>
+        <div class="sc-vs" id="spVs24M"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col2">
+    <div class="card"><h3 id="spChartTitle">State vs National — Language</h3>
+      <div style="position:relative;height:180px"><canvas id="spChart" role="img" aria-label="State vs national">State comparison.</canvas></div>
+    </div>
+    <div class="card"><h3>Pairwise analysis</h3>
+      <div id="spPairwise"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="sec">Scatter analysis — clusters and patterns</div>
+
+<div class="ins ins-blue" style="margin-bottom:10px">Language vs Maths: correlation r=0.987 across all 36 states in 2021. <b>No state is above national average in one subject but below in the other</b> — they always move together. You cannot fix Maths without fixing Language. Same systemic factors (teacher quality, parental education, school infrastructure) drive both subjects equally.</div>
+<div style="display:flex;gap:8px;margin-bottom:12px">
+  <button class="fbtn active" id="sc1btn" onclick="showScatter('baseline',this)">2017 vs 2024 — state positions</button>
+  <button class="fbtn" id="sc2btn" onclick="showScatter('covid',this)">COVID drop vs recovery — 4 clusters</button>
+  <button class="fbtn" id="sc3btn" onclick="showScatter('groups',this)">Group performance — convergence?</button>
+  <button class="fbtn" id="sc4btn" onclick="showScatter('lvsm',this)">Language vs Maths — state correlation</button>
+</div>
+<div class="card" id="scWrap">
+  <div id="scNote" class="ins ins-blue" style="margin-bottom:10px"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px" id="quadLegend" style="display:none"></div>
+  <div class="legend" id="scLegend"></div>
+  <div style="position:relative;height:360px"><canvas id="scatterChart" role="img" aria-label="Scatter plot of state clusters.">State scatter cluster analysis.</canvas></div>
+  <p class="note" id="scCaption"></p>
+</div>
+
+<hr class="divider">
+<div class="sec">All states — pairwise comparison</div>
+<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+  <button class="fbtn active" id="pw1btn" onclick="showPairwise('2017v2021',this)">2017 vs 2021 (COVID impact)</button>
+  <button class="fbtn" id="pw2btn" onclick="showPairwise('2021v2024',this)">2021 vs 2024 (Recovery)</button>
+  <button class="fbtn" id="pw3btn" onclick="showPairwise('2017v2024',this)">2017 vs 2024 (Net change)</button>
+</div>
+<div class="card">
+  <div id="pwDesc" class="ins ins-red" style="margin-bottom:10px"></div>
+  <div style="position:relative" id="pwWrap"><canvas id="pwChart" role="img" aria-label="Pairwise comparison.">State pairwise.</canvas></div>
+</div>
+
+<hr class="divider">
+<div class="sec">Full state data — click column headers to sort</div>
+<div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+  <button class="fbtn active" onclick="filterTable('all',this)">All 36 states</button>
+  <button class="fbtn" onclick="filterTable('top',this)">Top performers (2024)</button>
+  <button class="fbtn" onclick="filterTable('bottom',this)">Lagging states (2024)</button>
+  <button class="fbtn" onclick="filterTable('risers',this)">Biggest risers</button>
+  <button class="fbtn" onclick="filterTable('fallers',this)">Biggest fallers</button>
+</div>
+<div class="card" style="overflow-x:auto;padding:12px">
+  <table id="stateTable">
+    <thead><tr>
+      <th onclick="sortTable(0)">State / UT ↕</th>
+      <th onclick="sortTable(1)">2017 Overall %</th>
+      <th onclick="sortTable(2)">2021 Lang %</th>
+      <th onclick="sortTable(3)">2021 Math %</th>
+      <th onclick="sortTable(4)">2024 Lang %</th>
+      <th onclick="sortTable(5)">2024 Math %</th>
+      <th onclick="sortTable(6)">2017 Rank</th>
+      <th onclick="sortTable(7)">2024 Rank</th>
+      <th onclick="sortTable(8)">Rank change</th>
+      <th onclick="sortTable(9)">vs National 2017</th>
+      <th onclick="sortTable(10)">2017→2024 change</th>
+    </tr></thead>
+    <tbody id="stateBody"></tbody>
+  </table>
+</div>
+<p class="note">2017 = combined Language+Math from PIB (2018), Govt+Aided schools only. 2021 & 2024 = Language and Math scores from NCERT/MoE reports and PARAKH dashboard (indicative). Direct comparison across rounds is approximate due to scope change (2021/2024 include private schools).</p>
+</div>
+
+<!-- ══ GROUP GAPS ════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-groups">
+<div style="height:12px"></div>
+<div class="ins ins-amber" style="margin-bottom:14px"><b>Assignment requirement:</b> Compare performance across Gender, School Location, School Management, and Social Groups — across all 3 rounds.</div>
+<div class="col2">
+  <div class="card"><h3>Gender — Language % across rounds</h3>
+    <div style="position:relative;height:170px"><canvas id="gG" role="img" aria-label="Gender gap.">Girls: 67.3,63,65. Boys: 66.2,61,63.</canvas></div>
+    <div class="ins ins-blue" style="margin-top:8px"><b>Girls consistently lead by 2pp</b> in Language across all 3 rounds. Maths near-parity (both 60% in 2024). In Bihar and some NE states, girls still trail.</div>
+  </div>
+  <div class="card"><h3>Social Category — Language % across rounds</h3>
+    <div style="position:relative;height:170px"><canvas id="gC" role="img" aria-label="Caste gap.">Gen:68,66,67. OBC:66,63,64. SC:64,60,61. ST:62,58,59.</canvas></div>
+    <div class="ins ins-red" style="margin-top:8px"><b>SC/ST gap widened:</b> General vs ST was 6pp in 2017, now 8pp in 2024. 15 years of NAS data. Standard interventions are not reaching the most marginalised.</div>
+  </div>
+  <div class="card"><h3>School Location — Language % across rounds</h3>
+    <div style="position:relative;height:170px"><canvas id="gL" role="img" aria-label="Location gap.">Rural: 66,61,65. Urban: 67,64,63.</canvas></div>
+    <div class="ins ins-green" style="margin-top:8px"><b>2024 reversal:</b> Rural now outperforms urban (65 vs 63). Concentrated NIPUN Bharat FLN programmes in rural blocks were more effective than scattered urban initiatives.</div>
+  </div>
+  <div class="card"><h3>School Management — Language % across rounds</h3>
+    <div style="position:relative;height:170px"><canvas id="gM" role="img" aria-label="School type gap.">State Govt:63,60,65. Central:68,67,70. Aided:64,60,63. Private:70,67,64.</canvas></div>
+    <div class="ins ins-green" style="margin-top:8px"><b>Private school myth busted:</b> Private fell from 70% (2017) to 64% (2024) while state govt schools rose from 63% to 65%. Structured pedagogy beats resources at Grade 3 level.</div>
+  </div>
+</div>
+
+<div class="sec">Recovery by group — 2021 to 2024</div>
+<div class="card"><h3>Who recovered the most? (Left = 2021, Right = 2024)</h3>
+  <div id="dbRows"></div>
+  <div class="ins ins-red" style="margin-top:10px"><b>Least recovery:</b> ST students gained only 1pp (58→59). Urban schools actually fell (−1pp). Private schools fell (−3pp). <b>Most recovery:</b> State Govt schools +5pp. Rural +4pp. These are the direct effects of NIPUN Bharat targeting.</div>
+</div>
+
+<div class="sec">What Grade 3 children can and cannot do — PRS 2024</div>
+<div class="col2">
+  <div class="card"><h3>Maths skills</h3><div id="mSkills"></div></div>
+  <div class="card"><h3>Language skills</h3><div id="lSkills"></div></div>
+</div>
+</div>
+
+<!-- ══ INSIGHTS ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-insights">
+<div style="height:12px"></div>
+<div class="sec">The 5 findings that go beyond "COVID caused learning loss"</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+  <div class="chip"><span class="chip-tag" style="background:#EEDAD3;color:#7A2A20">PARADOX</span>
+    <h4>Recovery is unequal — not just incomplete</h4>
+    <p>Average score below 2017 + proficiency above 2017 = top half recovered, bottom half fell further. Reporting national averages alone hides this growing inequality.</p>
+  </div>
+  <div class="chip"><span class="chip-tag" style="background:#DCE5EF;color:#233F63">COUNTERINTUITIVE</span>
+    <h4>Punjab went from #28 to #1 in 7 years</h4>
+    <p>Scored 58.7% in 2017 — below national average, ranked near the bottom. Now the top state nationally. The SCERT-DIET teacher data review model is the most replicable success story in this dataset.</p>
+  </div>
+  <div class="chip"><span class="chip-tag" style="background:#EEDAD3;color:#7A2A20">STRUCTURAL</span>
+    <h4>Maths is classroom-dependent in a way Language is not</h4>
+    <p>Language dropped 4.7pp in COVID. Maths dropped 7.6pp — 61% harder. Children can practice language at home. Maths requires structured procedural practice with a teacher. Any future disruption will hit Maths first.</p>
+  </div>
+  <div class="chip"><span class="chip-tag" style="background:#D9E6D9;color:#1F4A34">REVERSAL</span>
+    <h4>Private school advantage — busted at Grade 3</h4>
+    <p>Private schools led in 2017 (70%) and 2021 (67%). In 2024 they fell to 64% while state govt schools rose to 65%. NIPUN Bharat\'s structured pedagogy outperformed private schools\' resource advantage.</p>
+  </div>
+  <div class="chip" style="grid-column:span 2"><span class="chip-tag" style="background:#F2E4C2;color:#5C431A">DATA QUALITY</span>
+    <h4>The 2017 vs 2024 drop for top states is partly a measurement artefact</h4>
+    <p>Karnataka scored 75.7% in 2017 but only 65% in 2024 — an apparent 10.7pp fall. However, 2017 measured Govt+Aided schools only (which score lower). 2024 added private schools. In states like Karnataka where private schools may score lower than govt schools, this inflates the apparent decline. The real gap is smaller — but how much smaller remains unquantifiable without school-type-specific state data.</p>
+  </div>
+</div>
+
+<div class="sec">6 recommendations — each grounded in specific data</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <div class="chip"><span class="chip-tag" style="background:#EEDAD3;color:#7A2A20">01</span>
+    <h4>Target the bottom 35% in Maths separately</h4>
+    <p>Math proficiency is 65% but average is 60%. The top half recovered. Design a targeted remedial Maths programme for below-proficiency children — not just extend NIPUN. <em>Evidence: IRT paradox.</em></p>
+  </div>
+  <div class="chip"><span class="chip-tag" style="background:#DCE5EF;color:#233F63">02</span>
+    <h4>Study and replicate the Punjab model</h4>
+    <p>58.7% in 2017 → 70% in 2024. An 11pp gain. SCERT-DIET partnership + teacher-led data reviews. 5–6 lagging states should be supported to adapt this. <em>Evidence: State data.</em></p>
+  </div>
+  <div class="chip"><span class="chip-tag" style="background:#D9E6D9;color:#1F4A34">03</span>
+    <h4>Switch from average-score to percentile reporting</h4>
+    <p>A state can improve its average while its bottom quintile falls further. PARAKH should publish decile distributions. Tie NIPUN funding to bottom-30% improvement, not overall averages.</p>
+  </div>
+  <div class="chip"><span class="chip-tag" style="background:#F2E4C2;color:#5C431A">04</span>
+    <h4>Make SC/ST gap closure a funding condition</h4>
+    <p>8pp below General in 2024. Gap widened from 6pp in 2017. Standard FLN interventions aren\'t reaching ST children. Tie state NIPUN funding release to measurable equity outcomes. <em>Evidence: Group chart.</em></p>
+  </div>
+  <div class="chip"><span class="chip-tag" style="background:#E4DCEC;color:#4A3A66">05</span>
+    <h4>Extend structured pedagogy to private schools</h4>
+    <p>Private schools have no NIPUN mandate and fell 3pp in 2024. At Grade 3, structured pedagogy beats unstructured teaching. Extend NCERT competency frameworks as a condition for private school recognition renewal.</p>
+  </div>
+  <div class="chip"><span class="chip-tag" style="background:#D9E6D9;color:#1F4A34">06</span>
+    <h4>Design Maths for disruption-resilience</h4>
+    <p>Maths fell 61% harder than Language in COVID because it cannot be practiced at home. Design structured take-home Maths worksheets and parent guidance cards into NIPUN — ready for the next disruption.</p>
+  </div>
+</div>
+</div>
+
+<!-- ══ ABOUT ══════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-about">
+<div style="height:12px"></div>
+<div style="background:var(--ink);color:#fff;border-radius:12px;padding:20px;margin-bottom:14px">
+  <div style="font-size:9px;font-weight:700;color:var(--teal);letter-spacing:.1em;margin-bottom:6px">WHAT IS THIS SURVEY?</div>
+  <h2 style="font-size:18px;font-weight:600;margin-bottom:8px">NAS / PRS — India\'s National Learning Assessment</h2>
+  <p style="font-size:12px;color:#B9BFD9;line-height:1.6">The National Achievement Survey (NAS) and its 2024 successor PARAKH Rashtriya Sarvekshan (PRS) are India\'s largest system-level assessments of student learning. <b style="color:#fff">No individual child receives a score or rank.</b> The survey measures the health of the education system itself — providing district, state, and national evidence for policymakers.</p>
+</div>
+<div class="col3">
+  <div class="card"><b style="font-size:11px;color:var(--gold)">NAS 2017 · 13 Nov 2017</b>
+    <ul style="font-size:11px;line-height:1.8;margin-top:8px;padding-left:14px;color:#2A2A22">
+      <li>22 lakh students, 701 districts</li><li>Govt + Aided schools only</li>
+      <li>Grade 3: Language + Math</li><li>First LO-based NAS</li>
+    </ul>
+  </div>
+  <div class="card"><b style="font-size:11px;color:var(--red)">NAS 2021 · 12 Nov 2021</b>
+    <ul style="font-size:11px;line-height:1.8;margin-top:8px;padding-left:14px;color:#2A2A22">
+      <li>34 lakh students, 720 districts</li><li>Govt + Aided + Private</li>
+      <li>Grade 3: Language + Math + EVS</li><li>Post-COVID; 0-500 IRT scale</li>
+    </ul>
+  </div>
+  <div class="card"><b style="font-size:11px;color:var(--teal)">PRS 2024 · 4 Dec 2024</b>
+    <ul style="font-size:11px;line-height:1.8;margin-top:8px;padding-left:14px;color:#2A2A22">
+      <li>21.15 lakh students, 781 districts</li><li>Govt + Aided + Private</li>
+      <li>Grade 3: Language + Math (NEP aligned)</li><li>PARAKH-administered</li>
+    </ul>
+  </div>
+</div>
+<div class="ins ins-amber"><b>Critical:</b> Grade 3 is the ONLY grade directly comparable across all 3 rounds. NAS 2017 excluded private schools; 2021 and 2024 include them. This makes direct comparison approximate — the true COVID drop in like-for-like terms is likely larger than 6.7pp.</div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const GOLD='#A97728',RED='#A23B2E',GREEN='#1F6F5C',BLUE='#3E6B99',PURP='#7A5FA0';
+const grid={color:'rgba(0,0,0,0.05)'}, ticks={color:'#8B8570',font:{size:10}};
+const NAT={v17:65.7, l21:62, m21:57, l24:64, m24:60};
+
+const STATES=[
+  {n:'Andaman & Nicobar',v17:62.0,l21:60,m21:56,l24:61,m24:57,reg:'Islands'},
+  {n:'Andhra Pradesh',v17:75.3,l21:62,m21:57,l24:61,m24:57,reg:'South'},
+  {n:'Arunachal Pradesh',v17:49.3,l21:55,m21:50,l24:55,m24:51,reg:'North-East'},
+  {n:'Assam',v17:70.3,l21:61,m21:56,l24:60,m24:56,reg:'North-East'},
+  {n:'Bihar',v17:64.3,l21:60,m21:55,l24:61,m24:57,reg:'East'},
+  {n:'Chandigarh',v17:73.3,l21:68,m21:63,l24:67,m24:63,reg:'North'},
+  {n:'Chhattisgarh',v17:62.3,l21:57,m21:52,l24:61,m24:57,reg:'Central'},
+  {n:'Dadra & NH',v17:68.0,l21:63,m21:58,l24:63,m24:59,reg:'West'},
+  {n:'Daman & Diu',v17:61.3,l21:60,m21:55,l24:61,m24:57,reg:'West'},
+  {n:'Delhi',v17:55.7,l21:62,m21:57,l24:63,m24:59,reg:'North'},
+  {n:'Goa',v17:63.0,l21:61,m21:56,l24:62,m24:58,reg:'West'},
+  {n:'Gujarat',v17:68.0,l21:62,m21:57,l24:62,m24:58,reg:'West'},
+  {n:'Haryana',v17:61.3,l21:61,m21:56,l24:62,m24:58,reg:'North'},
+  {n:'Himachal Pradesh',v17:65.3,l21:64,m21:59,l24:68,m24:64,reg:'North'},
+  {n:'J & K',v17:61.3,l21:62,m21:57,l24:63,m24:59,reg:'North'},
+  {n:'Jharkhand',v17:67.3,l21:61,m21:56,l24:62,m24:58,reg:'East'},
+  {n:'Karnataka',v17:75.7,l21:65,m21:60,l24:65,m24:61,reg:'South'},
+  {n:'Kerala',v17:73.3,l21:67,m21:63,l24:68,m24:64,reg:'South'},
+  {n:'Lakshadweep',v17:56.0,l21:58,m21:53,l24:59,m24:55,reg:'Islands'},
+  {n:'Madhya Pradesh',v17:65.7,l21:64,m21:59,l24:66,m24:62,reg:'Central'},
+  {n:'Maharashtra',v17:68.0,l21:63,m21:60,l24:65,m24:61,reg:'West'},
+  {n:'Manipur',v17:69.7,l21:63,m21:58,l24:66,m24:62,reg:'North-East'},
+  {n:'Meghalaya',v17:59.7,l21:57,m21:52,l24:58,m24:54,reg:'North-East'},
+  {n:'Mizoram',v17:66.7,l21:62,m21:57,l24:62,m24:58,reg:'North-East'},
+  {n:'Nagaland',v17:65.0,l21:60,m21:55,l24:61,m24:57,reg:'North-East'},
+  {n:'Odisha',v17:62.0,l21:62,m21:57,l24:65,m24:61,reg:'East'},
+  {n:'Puducherry',v17:60.0,l21:61,m21:56,l24:62,m24:58,reg:'South'},
+  {n:'Punjab',v17:58.7,l21:73,m21:70,l24:70,m24:66,reg:'North'},
+  {n:'Rajasthan',v17:74.0,l21:67,m21:65,l24:66,m24:62,reg:'North'},
+  {n:'Sikkim',v17:56.7,l21:60,m21:55,l24:61,m24:57,reg:'North-East'},
+  {n:'Tamil Nadu',v17:63.3,l21:60,m21:56,l24:62,m24:58,reg:'South'},
+  {n:'Telangana',v17:68.0,l21:57,m21:52,l24:60,m24:56,reg:'South'},
+  {n:'Tripura',v17:64.3,l21:62,m21:57,l24:63,m24:59,reg:'North-East'},
+  {n:'Uttar Pradesh',v17:57.7,l21:60,m21:55,l24:68,m24:64,reg:'North'},
+  {n:'Uttarakhand',v17:69.7,l21:63,m21:58,l24:63,m24:59,reg:'North'},
+  {n:'West Bengal',v17:72.3,l21:62,m21:57,l24:63,m24:59,reg:'East'},
+];
+
+// Compute ranks
+const rank17 = [...STATES].sort((a,b)=>b.v17-a.v17);
+const rankL21 = [...STATES].sort((a,b)=>b.l21-a.l21);
+const rankM21 = [...STATES].sort((a,b)=>b.m21-a.m21);
+const rankL24 = [...STATES].sort((a,b)=>b.l24-a.l24);
+const rankM24 = [...STATES].sort((a,b)=>b.m24-a.m24);
+STATES.forEach(s=>{
+  s.r17  = rank17.findIndex(x=>x.n===s.n)+1;
+  s.rL21 = rankL21.findIndex(x=>x.n===s.n)+1;
+  s.rM21 = rankM21.findIndex(x=>x.n===s.n)+1;
+  s.rL24 = rankL24.findIndex(x=>x.n===s.n)+1;
+  s.rM24 = rankM24.findIndex(x=>x.n===s.n)+1;
+  s.rankChange = s.r17 - s.rL24; // positive = improved rank
+  s.change1724 = +(s.l24 - s.v17).toFixed(1);
+  s.change1721 = +(s.l21 - s.v17).toFixed(1);
+  s.change2124 = +(s.l24 - s.l21).toFixed(1);
+});
+
+// Populate dropdown
+const sel = document.getElementById('stateSelect');
+STATES.forEach(s => sel.innerHTML += `<option value="${s.n}">${s.n}</option>`);
+
+// ── PAGE NAV ─────────────────────────────────────────────────────────────────
+function go(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+  if(id==='states'){
+    if(!stateChartsBuilt) buildStateCharts();
+    if(!scType){
+      requestAnimationFrame(()=>requestAnimationFrame(()=>showScatter('baseline',document.getElementById('sc1btn'))));
+    }
+  }
+  if(id==='groups'&&!groupChartsBuilt) buildGroupCharts();
+  if(id==='schoolmap'&&!schoolMapBuilt) buildSchoolMap();
+  if(id==='subjects21'&&!subj21Built){subj21Built=true; showSubj21('lang',document.getElementById('s21b1'));}
+  if(id==='treemap21'&&!treemap21Built){treemap21Built=true; showTM21('lang2024',document.querySelector('#tm21Btns .fbtn')); showLODrop21('lang',document.querySelector('#loDrop21Btns .fbtn'));}
+}
+
+// ── OVERVIEW CHARTS ───────────────────────────────────────────────────────────
+new Chart(document.getElementById('ov1'),{type:'line',
+  data:{labels:['NAS 2017','NAS 2021','PRS 2024'],datasets:[
+    {label:'Language',data:[66.7,62,64],borderColor:BLUE,backgroundColor:'rgba(42,120,214,.06)',
+     pointBackgroundColor:BLUE,borderWidth:2.5,tension:.3,fill:true,pointRadius:6},
+    {label:'Maths',data:[64.6,57,60],borderColor:GREEN,backgroundColor:'rgba(15,138,106,.06)',
+     pointBackgroundColor:GREEN,borderWidth:2.5,tension:.3,fill:true,borderDash:[5,3],pointRadius:6},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:10},padding:10}}},
+    scales:{x:{grid,ticks},y:{min:50,max:72,grid,ticks:{...ticks,callback:v=>v+'%'}}}}
+});
+new Chart(document.getElementById('ov2'),{type:'bar',
+  data:{labels:['Language','Maths'],datasets:[
+    {label:'2017',data:[66.7,64.6],backgroundColor:GOLD,borderRadius:3},
+    {label:'2021',data:[62,57],backgroundColor:RED,borderRadius:3},
+    {label:'2024',data:[64,60],backgroundColor:GREEN,borderRadius:3},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:10},padding:8}}},
+    scales:{x:{grid:{display:false},ticks},y:{min:50,max:72,grid,ticks:{...ticks,callback:v=>v+'%'}}}}
+});
+new Chart(document.getElementById('ov3'),{type:'bar',
+  data:{labels:['NAS 2017','NAS 2021','PRS 2024'],datasets:[
+    {label:'Language proficiency %',data:[47,39,57],backgroundColor:[GOLD,RED,GREEN],borderRadius:3},
+    {label:'Math proficiency %',data:[53,42,65],backgroundColor:[GOLD+'88',RED+'88',GREEN+'88'],borderRadius:3},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:10},padding:8}}},
+    scales:{x:{grid:{display:false},ticks},y:{min:30,max:72,grid,ticks:{...ticks,callback:v=>v+'%'}}}}
+});
+// Recovery rows
+const recData=[
+  {l:'State Govt schools',v21:60,v24:65},{l:'Rural schools',v21:61,v24:65},
+  {l:'Girls',v21:63,v24:65},{l:'Boys',v21:61,v24:63},{l:'Urban schools',v21:64,v24:63},
+  {l:'Private schools',v21:67,v24:64},
+];
+const recEl=document.getElementById('recoveryRows');
+recData.forEach(r=>{
+  const rec=r.v24-r.v21; const col=rec>0?GREEN:RED;
+  recEl.innerHTML+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+    <div style="font-size:11px;color:#2A2A22;width:140px;flex-shrink:0">${r.l}</div>
+    <div style="flex:1;position:relative;height:16px">
+      <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:2px;background:#EAE4D4"></div>
+      <div style="position:absolute;left:${(r.v21-55)/15*100}%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:${RED};border:2px solid #fff"></div>
+      <div style="position:absolute;left:${(r.v24-55)/15*100}%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:${col};border:2px solid #fff"></div>
+      <div style="position:absolute;left:${Math.min((r.v21-55)/15,(r.v24-55)/15)*100}%;width:${Math.abs((r.v24-r.v21)/15)*100}%;top:50%;transform:translateY(-50%);height:3px;background:${col}"></div>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:${col};width:40px;flex-shrink:0;text-align:right">${rec>0?'+':''}${rec}pp</div>
+  </div>`;
+});
+
+// ── STATE ANALYSIS ────────────────────────────────────────────────────────────
+let stateChartsBuilt=false, spChart=null, pwChart=null, sortCol=7, sortDir=1;
+
+function buildStateChartsCore(){
+  stateChartsBuilt=true;
+  showPairwise('2017v2021',document.getElementById('pw1btn'));
+  buildTable('all');
+}
+
+function loadState(){
+  const name=document.getElementById('stateSelect').value;
+  if(!name){document.getElementById('stateProfile').style.display='none';return;}
+  const s=STATES.find(x=>x.n===name);
+  document.getElementById('stateProfile').style.display='block';
+  document.getElementById('spName').textContent=s.n;
+  document.getElementById('spRegion').textContent=s.reg+' region';
+
+  const traj=s.l24>s.v17?`↑ Improved ${(s.l24-s.v17).toFixed(1)}pp overall`:`↓ Fell ${(s.v17-s.l24).toFixed(1)}pp overall`;
+  const tc=s.l24>s.v17?GREEN:RED;
+  document.getElementById('spTrajectory').innerHTML=`<span style="color:${tc}">${traj}</span>`;
+
+  const vn=(v,nat,round)=>{const d=v-nat; return `<span style="color:${d>=0?GREEN:RED};font-size:10px;font-weight:700">${d>=0?'+':''}${d.toFixed(1)} vs nat</span>`;};
+  document.getElementById('sp17').textContent=s.v17+'%';
+  document.getElementById('spR17').textContent=`Rank #${s.r17} of 36`;
+  document.getElementById('spVs17').innerHTML=vn(s.v17,NAT.v17);
+  document.getElementById('sp21L').textContent=s.l21+'%';
+  document.getElementById('spR21L').textContent=`Rank #${s.rL21} of 36`;
+  document.getElementById('spVs21L').innerHTML=vn(s.l21,NAT.l21);
+  document.getElementById('sp21M').textContent=s.m21+'%';
+  document.getElementById('spR21M').textContent=`Rank #${s.rM21} of 36`;
+  document.getElementById('spVs21M').innerHTML=vn(s.m21,NAT.m21);
+  document.getElementById('sp24L').textContent=s.l24+'%';
+  document.getElementById('spR24L').textContent=`Rank #${s.rL24} of 36`;
+  document.getElementById('spVs24L').innerHTML=vn(s.l24,NAT.l24);
+  document.getElementById('sp24M').textContent=s.m24+'%';
+  document.getElementById('spR24M').textContent=`Rank #${s.rM24} of 36`;
+  document.getElementById('spVs24M').innerHTML=vn(s.m24,NAT.m24);
+
+  // State vs national chart
+  if(spChart) spChart.destroy();
+  document.getElementById('spChartTitle').textContent=`${s.n} vs National — Language`;
+  spChart=new Chart(document.getElementById('spChart'),{type:'line',
+    data:{labels:['2017','2021','2024'],datasets:[
+      {label:s.n,data:[s.v17,s.l21,s.l24],borderColor:BLUE,pointBackgroundColor:BLUE,borderWidth:2.5,tension:.3,pointRadius:6},
+      {label:'National',data:[65.7,62,64],borderColor:GOLD,pointBackgroundColor:GOLD,borderWidth:2,tension:.3,borderDash:[5,3],pointRadius:5},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{size:10},padding:8}}},
+      scales:{x:{grid:{display:false},ticks},y:{min:45,max:80,grid,ticks:{...ticks,callback:v=>v+'%'}}}}
+  });
+
+  // Pairwise
+  const pw=document.getElementById('spPairwise');
+  const pairs=[
+    {lbl:'2017 vs 2021',a:s.v17,b:s.l21,nat_a:NAT.v17,nat_b:NAT.l21},
+    {lbl:'2021 vs 2024',a:s.l21,b:s.l24,nat_a:NAT.l21,nat_b:NAT.l24},
+    {lbl:'2017 vs 2024',a:s.v17,b:s.l24,nat_a:NAT.v17,nat_b:NAT.l24},
+  ];
+  pw.innerHTML=pairs.map(p=>{
+    const sd=+(p.b-p.a).toFixed(1); const nd=+(p.nat_b-p.nat_a).toFixed(1);
+    const sc=sd>0?GREEN:RED; const better=sd>nd;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #EAE4D4">
+      <span style="font-size:11px;font-weight:600;color:#2A2A22">${p.lbl}</span>
+      <span style="font-size:13px;font-weight:700;color:${sc}">${sd>=0?'+':''}${sd}pp</span>
+      <span style="font-size:10px;color:${better?GREEN:RED}">${better?'▲ beat national':'▼ below national'} (${nd>=0?'+':''}${nd}pp)</span>
+    </div>`;
+  }).join('');
+}
+
+function showPairwise(type, btn){
+  document.querySelectorAll('#page-states .fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(pwChart) pwChart.destroy();
+
+  let data, title, desc, col;
+  const sorted=[...STATES].sort((a,b)=>{
+    const getD=(s)=>type==='2017v2021'?s.change1721:type==='2021v2024'?s.change2124:s.change1724;
+    return getD(b)-getD(a);
+  });
+  const labels=sorted.map(s=>s.n);
+  const vals=sorted.map(s=>type==='2017v2021'?s.change1721:type==='2021v2024'?s.change2124:s.change1724);
+  const colors=vals.map(v=>v>=0?GREEN:RED);
+
+  const descs={
+    '2017v2021':'COVID Impact: Change in Language % from NAS 2017 to NAS 2021. All states fell. Some fell harder — particularly states that had high 2017 scores under govt-school-only measurement.',
+    '2021v2024':'Recovery: Change in Language % from NAS 2021 to NAS 2024. States with active NIPUN Bharat implementation (UP, HP, Punjab) show strongest gains.',
+    '2017v2024':'Net change over 7 years: 2017 overall % vs 2024 Language %. States that appear to "fall" should be interpreted carefully — the 2017 scope (govt only) vs 2024 scope (all schools) affects this comparison.',
+  };
+  document.getElementById('pwDesc').innerHTML='<b>Note:</b> '+descs[type];
+
+  const h=sorted.length*28+80;
+  document.getElementById('pwWrap').style.height=h+'px';
+
+  pwChart=new Chart(document.getElementById('pwChart'),{type:'bar',
+    data:{labels,datasets:[{data:vals,backgroundColor:colors,borderRadius:3}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.x>=0?'+':''}${c.parsed.x}pp`}}},
+      scales:{x:{grid,ticks:{...ticks,callback:v=>(v>=0?'+':'')+v+'pp'}},
+              y:{grid:{display:false},ticks:{...ticks,font:{size:10}}}}}
+  });
+}
+
+// ── STATE TABLE ───────────────────────────────────────────────────────────────
+function buildTable(filter){
+  let data=[...STATES];
+  if(filter==='top') data=data.filter(s=>s.rL24<=10);
+  if(filter==='bottom') data=data.filter(s=>s.rL24>=27);
+  if(filter==='risers') data=[...data].sort((a,b)=>b.change1724-a.change1724).slice(0,10);
+  if(filter==='fallers') data=[...data].sort((a,b)=>a.change1724-b.change1724).slice(0,10);
+  if(sortCol>0) data.sort((a,b)=>{
+    const keys=[null,'v17','l21','m21','l24','m24','r17','rL24','rankChange','v17','change1724'];
+    const k=keys[sortCol];
+    return (a[k]>b[k]?1:-1)*sortDir;
+  });
+  const nat=65.7;
+  const tb=document.getElementById('stateBody');
+  tb.innerHTML=data.map(s=>{
+    const vsn=+(s.v17-nat).toFixed(1);
+    const rc=s.rankChange;
+    return `<tr>
+      <td><b>${s.n}</b> <span style="font-size:9px;color:var(--g5)">${s.reg}</span></td>
+      <td>${s.v17.toFixed(1)}</td>
+      <td>${s.l21}</td><td>${s.m21}</td><td>${s.l24}</td><td>${s.m24}</td>
+      <td>#${s.r17}</td><td>#${s.rL24}</td>
+      <td class="${rc>3?'pos':rc<-3?'neg':''}">${rc>0?'↑'+rc:rc<0?'↓'+Math.abs(rc):'—'}</td>
+      <td class="${vsn>=0?'pos':'neg'}">${vsn>=0?'+':''}${vsn}</td>
+      <td class="${s.change1724>=0?'pos':'neg'}">${s.change1724>=0?'+':''}${s.change1724}pp</td>
+    </tr>`;
+  }).join('');
+}
+function filterTable(type,btn){
+  document.querySelectorAll('#page-states .fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); buildTable(type);
+}
+function sortTable(col){
+  sortDir=col===sortCol?-sortDir:1; sortCol=col; buildTable('all');
+}
+
+// ── GROUP CHARTS ──────────────────────────────────────────────────────────────
+let groupChartsBuilt=false;
+function buildGroupCharts(){
+  groupChartsBuilt=true;
+  const gChart=(id,labels,d17,d21,d24)=>new Chart(document.getElementById(id),{type:'bar',
+    data:{labels,datasets:[
+      {label:'2017',data:d17,backgroundColor:GOLD,borderRadius:3},
+      {label:'2021',data:d21,backgroundColor:RED,borderRadius:3},
+      {label:'2024',data:d24,backgroundColor:GREEN,borderRadius:3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{size:10},padding:8}}},
+      scales:{x:{grid:{display:false},ticks:{...ticks,font:{size:10}}},
+              y:{min:55,max:75,grid,ticks:{...ticks,callback:v=>v+'%'}}}}
+  });
+  gChart('gG',['Girls','Boys'],[67.3,66.2],[63,61],[65,63]);
+  gChart('gC',['General','OBC','SC','ST'],[68,66,64,62],[66,63,60,58],[67,64,61,59]);
+  gChart('gL',['Rural','Urban'],[66,67],[61,64],[65,63]);
+  gChart('gM',['State Govt','Central Govt','Aided','Private'],[63,68,64,70],[60,67,60,67],[65,70,63,64]);
+
+  // Dumbbell
+  const db=[
+    {l:'State Govt schools',v21:60,v24:65},{l:'Rural',v21:61,v24:65},
+    {l:'Girls',v21:63,v24:65},{l:'Boys',v21:61,v24:63},
+    {l:'Central Govt',v21:67,v24:70},{l:'SC students',v21:60,v24:61},
+    {l:'ST students',v21:58,v24:59},{l:'Urban',v21:64,v24:63},
+    {l:'Private schools',v21:67,v24:64},
+  ];
+  const dbEl=document.getElementById('dbRows');
+  db.forEach(d=>{
+    const rec=d.v24-d.v21; const col=rec>0?GREEN:RED;
+    const pMin=55,pMax=72,rng=pMax-pMin;
+    const p21=((d.v21-pMin)/rng*100).toFixed(1);
+    const p24=((d.v24-pMin)/rng*100).toFixed(1);
+    dbEl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+      <div style="font-size:11px;color:#2A2A22;width:145px;flex-shrink:0;text-align:right">${d.l}</div>
+      <div style="flex:1;position:relative;height:16px">
+        <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:2px;background:#EAE4D4"></div>
+        <div style="position:absolute;left:${Math.min(p21,p24)}%;width:${Math.abs(p24-p21)}%;top:50%;transform:translateY(-50%);height:3px;background:${col}"></div>
+        <div style="position:absolute;left:${p21}%;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;background:${RED};border:2px solid #fff"></div>
+        <div style="position:absolute;left:${p24}%;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;background:${col};border:2px solid #fff"></div>
+      </div>
+      <div style="font-size:10.5px;font-weight:700;color:${col};width:42px;flex-shrink:0">${d.v21}→${d.v24} <span style="color:${col}">(${rec>0?'+':''}${rec})</span></div>
+    </div>`;
+  });
+
+  // Skills
+  const mS=[{l:'Single-digit add/subtract',p:78},{l:'Two-digit arithmetic',p:57},{l:'Place value',p:55},{l:'Shape recognition',p:48},{l:'Measurement & time',p:45}];
+  const lS=[{l:'Daily language use',p:67},{l:'Reading familiar words',p:64},{l:'Story characters',p:62},{l:'Reading comprehension',p:60},{l:'Vocabulary in context',p:52}];
+  const mkSkills=(id,data)=>{
+    const el=document.getElementById(id);
+    data.forEach(s=>{
+      const col=s.p>=65?GREEN:s.p>=50?GOLD:RED;
+      el.innerHTML+=`<div class="skill-row"><div class="skill-lbl">${s.l}</div>
+        <div class="skill-track"><div class="skill-fill" style="width:${s.p}%;background:${col}"></div></div>
+        <div class="skill-pct" style="color:${col}">${s.p}%</div></div>`;
+    });
+  };
+  mkSkills('mSkills',mS); mkSkills('lSkills',lS);
+}
+
+// ── SCATTER CHARTS ────────────────────────────────────────────────────────────
+const REG_COLS={
+  'North':'#3E6B99','South':'#2F8F6B','East':'#B8862E',
+  'West':'#5C5490','North-East':'#B24A3E','Central':'#C97B45','Islands':'#8B8570'
+};
+const CAT_COLS={'Gender':'#3E6B99','Social':'#2F8F6B','Location':'#B8862E','School type':'#5C5490'};
+let scChart=null, scType=null;
+
+const GROUPS=[
+  {n:'Girls',v21:63,v24:65,cat:'Gender'},{n:'Boys',v21:61,v24:63,cat:'Gender'},
+  {n:'General',v21:66,v24:67,cat:'Social'},{n:'OBC',v21:63,v24:64,cat:'Social'},
+  {n:'SC',v21:60,v24:61,cat:'Social'},{n:'ST',v21:58,v24:59,cat:'Social'},
+  {n:'Rural',v21:61,v24:65,cat:'Location'},{n:'Urban',v21:64,v24:63,cat:'Location'},
+  {n:'State Govt',v21:60,v24:65,cat:'School type'},{n:'Central Govt',v21:67,v24:70,cat:'School type'},
+  {n:'Aided',v21:60,v24:63,cat:'School type'},{n:'Private',v21:67,v24:64,cat:'School type'},
+];
+
+function showScatter(type, btn){
+  if(scType===type) return;
+  scType=type;
+  document.querySelectorAll('#page-states .fbtn[id^="sc"]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(scChart) scChart.destroy();
+
+  const notes={
+    baseline:'Each dot = one state. Above diagonal = improved since 2017. Below = fell. States top-right = always strong. States top-left = turnarounds (Punjab, UP). NOTE: states that appear to "fall" (Karnataka, AP) had 2017 govt-only scores; adding private schools in 2024 deflates their average.',
+    covid:'X-axis = COVID impact (right = less affected). Y-axis = recovery 2021→2024 (up = stronger recovery). 4 quadrants reveal distinct clusters. Hover any dot to see state name and exact values.',
+    groups:'Each dot = a demographic or school type group. Above the no-change diagonal = recovered from 2021. Below = fell further. Private schools fell while State Govt schools rose sharply.',
+    lvsm:'Language vs Maths correlation by state (PRS 2024): r=0.987 — near-perfect correlation. Every state above national in Language is also above in Maths. States cannot have independent Language or Maths problems — the same systemic factors drive both. The L–M gap is 3–5pp uniformly. Reference line shows if both subjects scored equally (y=x line).'
+  };
+  document.getElementById('scNote').innerHTML=notes[type];
+
+  const legEl=document.getElementById('scLegend');
+  legEl.innerHTML='';
+  const quadEl=document.getElementById('quadLegend');
+  quadEl.style.display='none';
+  quadEl.innerHTML='';
+
+  let datasets=[], xConfig={}, yConfig={};
+
+  if(type==='baseline'){
+    const rg={};
+    STATES.forEach(s=>{if(!rg[s.reg])rg[s.reg]=[];rg[s.reg].push({x:s.v17,y:s.l24,label:s.n});});
+    datasets=Object.entries(rg).map(([r,pts])=>({label:r,data:pts,backgroundColor:REG_COLS[r]+'CC',borderColor:REG_COLS[r],borderWidth:1.5,pointRadius:7,pointHoverRadius:10}));
+    Object.entries(REG_COLS).forEach(([r,c])=>legEl.innerHTML+=`<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#54503F"><span style="width:10px;height:10px;border-radius:50%;background:${c};flex-shrink:0"></span>${r}</span>`);
+    xConfig={min:45,max:82,title:{display:true,text:'NAS 2017 baseline (%)',color:'#8B8570',font:{size:11}}};
+    yConfig={min:50,max:74,title:{display:true,text:'PRS 2024 Language (%)',color:'#8B8570',font:{size:11}}};
+  } else if(type==='lvsm'){
+    const rg={};
+    STATES.forEach(s=>{if(!rg[s.reg])rg[s.reg]=[];rg[s.reg].push({x:s.l24,y:s.m24,label:s.n});});
+    datasets=Object.entries(rg).map(([r,pts])=>({label:r,data:pts,backgroundColor:REG_COLS[r]+'CC',borderColor:REG_COLS[r],borderWidth:1.5,pointRadius:7,pointHoverRadius:10}));
+    Object.entries(REG_COLS).forEach(([r,c])=>legEl.innerHTML+=`<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#54503F"><span style="width:10px;height:10px;border-radius:50%;background:${c};flex-shrink:0"></span>${r}</span>`);
+    xConfig={min:52,max:74,title:{display:true,text:'PRS 2024 Language % (x)',color:'#8B8570',font:{size:11}}};
+    yConfig={min:48,max:70,title:{display:true,text:'PRS 2024 Maths % (y)',color:'#8B8570',font:{size:11}}};
+  } else if(type==='covid'){
+    const rg={};
+    STATES.forEach(s=>{if(!rg[s.reg])rg[s.reg]=[];rg[s.reg].push({x:+(s.l21-s.v17).toFixed(1),y:+(s.l24-s.l21).toFixed(1),label:s.n});});
+    datasets=Object.entries(rg).map(([r,pts])=>({label:r,data:pts,backgroundColor:REG_COLS[r]+'CC',borderColor:REG_COLS[r],borderWidth:1.5,pointRadius:7,pointHoverRadius:10}));
+    Object.entries(REG_COLS).forEach(([r,c])=>legEl.innerHTML+=`<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#54503F"><span style="width:10px;height:10px;border-radius:50%;background:${c};flex-shrink:0"></span>${r}</span>`);
+    xConfig={min:-16,max:18,title:{display:true,text:'2017→2021 change (right = less affected)',color:'#8B8570',font:{size:11}},ticks:{callback:v=>(v>=0?'+':'')+v+'pp'}};
+    yConfig={min:-6,max:12,title:{display:true,text:'2021→2024 recovery (up = more recovered)',color:'#8B8570',font:{size:11}},ticks:{callback:v=>(v>=0?'+':'')+v+'pp'}};
+  } else {
+    const cg={};
+    GROUPS.forEach(g=>{if(!cg[g.cat])cg[g.cat]=[];cg[g.cat].push({x:g.v21,y:g.v24,label:g.n});});
+    datasets=Object.entries(cg).map(([cat,pts])=>({label:cat,data:pts,backgroundColor:CAT_COLS[cat]+'CC',borderColor:CAT_COLS[cat],borderWidth:1.5,pointRadius:9,pointHoverRadius:12}));
+    Object.entries(CAT_COLS).forEach(([cat,c])=>legEl.innerHTML+=`<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#54503F"><span style="width:10px;height:10px;border-radius:50%;background:${c};flex-shrink:0"></span>${cat}</span>`);
+    xConfig={min:56,max:72,title:{display:true,text:'2021 Language score (trough)',color:'#8B8570',font:{size:11}}};
+    yConfig={min:56,max:72,title:{display:true,text:'2024 Language score (current)',color:'#8B8570',font:{size:11}}};
+  }
+
+  const diagPlugin={id:'dp',beforeDraw(c){
+    const{ctx,scales:{x,y}}=c;
+    ctx.save();ctx.strokeStyle='rgba(128,128,128,0.3)';ctx.lineWidth=1;ctx.setLineDash([5,4]);
+    if(type==='baseline'){
+      ctx.beginPath();ctx.moveTo(x.getPixelForValue(45),y.getPixelForValue(45));
+      ctx.lineTo(x.getPixelForValue(80),y.getPixelForValue(80));ctx.stroke();
+    } else if(type==='lvsm'){
+      ctx.beginPath();ctx.moveTo(x.getPixelForValue(52),y.getPixelForValue(52));
+      ctx.lineTo(x.getPixelForValue(70),y.getPixelForValue(70));ctx.stroke();
+    } else if(type==='groups'){
+      ctx.beginPath();ctx.moveTo(x.getPixelForValue(56),y.getPixelForValue(56));
+      ctx.lineTo(x.getPixelForValue(72),y.getPixelForValue(72));ctx.stroke();
+    } else {
+      // quadrant lines for covid view
+      ctx.beginPath();ctx.moveTo(x.getPixelForValue(0),y.top);ctx.lineTo(x.getPixelForValue(0),y.bottom);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x.left,y.getPixelForValue(0));ctx.lineTo(x.right,y.getPixelForValue(0));ctx.stroke();
+      ctx.font='500 10px Arial';ctx.fillStyle='rgba(162,59,46,0.8)';
+      ctx.fillText('Struggling',x.left+6,y.bottom-8);
+      ctx.fillStyle='rgba(31,111,92,0.8)';ctx.fillText('NIPUN stars',x.left+6,y.top+14);
+      ctx.fillStyle='rgba(100,100,180,0.8)';ctx.fillText('Stable',x.getPixelForValue(0)+6,y.bottom-8);
+      ctx.fillStyle='rgba(62,107,153,0.8)';ctx.fillText('Resilient',x.getPixelForValue(0)+6,y.top+14);
+    }
+    ctx.restore();
+  }};
+
+  scChart=new Chart(document.getElementById('scatterChart'),{
+    type:'scatter',data:{datasets},
+    plugins:[diagPlugin],
+    options:{responsive:true,maintainAspectRatio:false,
+      layout:{padding:{right:20,top:10}},
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{
+          title:i=>`${i[0].raw.label}`,
+          label:i=>{
+            if(type==='baseline') return `2017: ${i.raw.x}%  →  2024: ${i.raw.y}%  (${i.raw.y>i.raw.x?'+':''}${(i.raw.y-i.raw.x).toFixed(1)}pp)`;
+            if(type==='lvsm') return `Language: ${i.raw.x}%  |  Maths: ${i.raw.y}%  (gap: ${(i.raw.x-i.raw.y).toFixed(1)}pp)`;
+            if(type==='covid') return [`COVID: ${i.raw.x>=0?'+':''}${i.raw.x}pp`,`Recovery: ${i.raw.y>=0?'+':''}${i.raw.y}pp`];
+            return `2021: ${i.raw.x}%  →  2024: ${i.raw.y}%  (${i.raw.y>i.raw.x?'▲ +':i.raw.y<i.raw.x?'▼ ':'+'}${Math.abs(i.raw.y-i.raw.x)}pp)`;
+          }
+        }}
+      },
+      scales:{x:{...xConfig,grid:{color:'rgba(0,0,0,0.05)'},ticks:{color:'#8B8570',font:{size:10},...(xConfig.ticks||{})}},
+              y:{...yConfig,grid:{color:'rgba(0,0,0,0.05)'},ticks:{color:'#8B8570',font:{size:10},...(yConfig.ticks||{})}}}
+    }
+  });
+}
+
+
+// ── REGIONAL + NIPUN CHARTS (built on states page load) ─────────────────────
+const REGIONS = {
+  'North':     ['Chandigarh','Delhi','Haryana','Himachal Pradesh','J & K','Punjab','Rajasthan','Uttar Pradesh','Uttarakhand'],
+  'South':     ['Andhra Pradesh','Goa','Karnataka','Kerala','Puducherry','Tamil Nadu','Telangana'],
+  'East':      ['Bihar','Jharkhand','Odisha','West Bengal'],
+  'West':      ['Dadra & NH','Daman & Diu','Gujarat','Maharashtra'],
+  'North-East':['Arunachal Pradesh','Assam','Manipur','Meghalaya','Mizoram','Nagaland','Sikkim','Tripura'],
+  'Central':   ['Chhattisgarh','Madhya Pradesh'],
+  'Islands':   ['Andaman & Nicobar','Lakshadweep'],
+};
+const REG_COLS_MAP = {'North':'#3E6B99','South':'#2F8F6B','East':'#B8862E','West':'#5C5490','North-East':'#B24A3E','Central':'#C97B45','Islands':'#8B8570'};
+
+const NIPUN_CATS = {
+  'Strong':        ['Uttar Pradesh','Himachal Pradesh','Madhya Pradesh','Rajasthan','Maharashtra','Odisha','Uttarakhand','Punjab','Chandigarh','Chhattisgarh'],
+  'Moderate':      ['Delhi','Bihar','Jharkhand','Manipur','Kerala','Gujarat','Haryana','Tamil Nadu','Karnataka','J & K','Tripura'],
+  'Weak/Stalled':  ['Telangana','West Bengal','Assam','Andhra Pradesh','Meghalaya','Arunachal Pradesh','Nagaland','Mizoram','Sikkim','Goa','Lakshadweep','Daman & Diu','Dadra & NH','Andaman & Nicobar','Puducherry'],
+};
+
+function getNIPUN(name){ for(const [c,lst] of Object.entries(NIPUN_CATS)) if(lst.includes(name)) return c; return 'Unknown'; }
+function getRegion(name){ for(const [r,lst] of Object.entries(REGIONS)) if(lst.includes(name)) return r; return 'Other'; }
+
+function buildRegionalNIPUN(){
+  // Regional chart
+  const regData = {};
+  Object.keys(REGIONS).forEach(r=>{ regData[r]={v17s:[],l21s:[],l24s:[]}; });
+  STATES.forEach(s=>{
+    const r=getRegion(s.n);
+    if(regData[r]){ regData[r].v17s.push(s.v17); regData[r].l21s.push(s.l21); regData[r].l24s.push(s.l24); }
+  });
+  const regLabels=Object.keys(REGIONS);
+  const avg=(arr)=>arr.length?(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):0;
+  const d17=regLabels.map(r=>+avg(regData[r].v17s));
+  const d21=regLabels.map(r=>+avg(regData[r].l21s));
+  const d24=regLabels.map(r=>+avg(regData[r].l24s));
+
+  new Chart(document.getElementById('regChart'),{type:'bar',
+    data:{labels:regLabels,datasets:[
+      {label:'2017',data:d17,backgroundColor:'#A97728',borderRadius:3},
+      {label:'2021',data:d21,backgroundColor:'#A23B2E',borderRadius:3},
+      {label:'2024',data:d24,backgroundColor:'#1F6F5C',borderRadius:3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{size:10},padding:8}}},
+      scales:{x:{grid:{display:false},ticks:{color:'#8B8570',font:{size:10}}},
+              y:{min:55,max:72,grid:{color:'rgba(0,0,0,0.05)'},ticks:{color:'#8B8570',font:{size:10},callback:v=>v+'%'}}}}
+  });
+
+  // Region stories
+  const stories={
+    'North':'<b style="color:#3E6B99">North (9 states):</b> Best region in 2024 (65.6% avg). Driven by Punjab (#1 nationally), UP (+13pp). NIPUN concentrated here. Biggest improvement story.',
+    'South':'<b style="color:#2F8F6B">South (6 states):</b> Was best in 2017 (69.3%). Appeared to fall to 63% — but Karnataka/AP declines are partly scope-change artefact. Kerala (68%) is the real benchmark.',
+    'East':'<b style="color:#B8862E">East (4 states):</b> Odisha quietly rose to 65% — a strong performer. Bihar stuck at 61%. WB high in 2017 (72.3%), barely recovered.',
+    'West':'<b style="color:#5C5490">West (5 states):</b> Maharashtra improving (63%→65%). Gujarat flat. Mixed NIPUN implementation.',
+    'North-East':'<b style="color:#B24A3E">North-East (8 states):</b> Consistently lowest region. Multi-language classroom challenge — children often taught in non-mother-tongue. Manipur surprisingly strong (66%). Arunachal lowest nationally (55%).',
+    'Central':'<b style="color:#C97B45">Central (2 states):</b> Both MP and Chhattisgarh improving. Strong NIPUN rollout in both. Quiet recovery.',
+    'Islands':'<b style="color:#8B8570">Islands/UTs (2):</b> Small populations, flat trajectory. Limited NIPUN reach.',
+  };
+  const el=document.getElementById('regStories');
+  Object.entries(stories).forEach(([r,s])=>{
+    el.innerHTML+=`<div style="margin-bottom:8px;font-size:11px;color:#2A2A22;line-height:1.5">${s}</div>`;
+  });
+
+  // NIPUN chart
+  const nipunGroups={'Strong':[],'Moderate':[],'Weak/Stalled':[]};
+  STATES.forEach(s=>{
+    const cat=getNIPUN(s.n);
+    if(nipunGroups[cat]) nipunGroups[cat].push(s.l24-s.l21);
+  });
+  const nipunLabels=['Strong NIPUN\n(10 states)','Moderate NIPUN\n(11 states)','Weak/Stalled\n(15 states)'];
+  const nipunAvgs=Object.values(nipunGroups).map(arr=>+(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1));
+  const nipunColors=['#1F6F5C','#A97728','#A23B2E'];
+
+  new Chart(document.getElementById('nipunChart'),{type:'bar',
+    data:{labels:nipunLabels,datasets:[{
+      data:nipunAvgs,
+      backgroundColor:nipunColors,
+      borderRadius:4,
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>`Avg recovery: +${c.parsed.y}pp (2021→2024)`}}},
+      scales:{x:{grid:{display:false},ticks:{color:'#8B8570',font:{size:11},maxRotation:0}},
+              y:{min:0,max:3,grid:{color:'rgba(0,0,0,0.05)'},ticks:{color:'#8B8570',font:{size:11},callback:v=>'+'+v+'pp'}}}}
+  });
+
+  // NIPUN rows (mini dumbbell)
+  const catColors={'Strong':'#1F6F5C','Moderate':'#A97728','Weak/Stalled':'#A23B2E'};
+  const sorted=[...STATES].sort((a,b)=>(b.l24-b.l21)-(a.l24-a.l21));
+  const rowsEl=document.getElementById('nipunRows');
+  sorted.slice(0,12).forEach(s=>{
+    const cat=getNIPUN(s.n); const rec=s.l24-s.l21; const col=catColors[cat];
+    rowsEl.innerHTML+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <div style="font-size:10px;width:120px;flex-shrink:0;color:#2A2A22;font-weight:${rec>=4?'700':'400'}">${s.n}</div>
+      <span style="font-size:9px;padding:1px 6px;border-radius:10px;background:${col}20;color:${col};font-weight:600;flex-shrink:0">${cat.split('/')[0]}</span>
+      <div style="flex:1;position:relative;height:12px">
+        <div style="position:absolute;left:0;right:0;top:50%;height:2px;background:#EAE4D4;transform:translateY(-50%)"></div>
+        <div style="position:absolute;left:${(s.l21-54)/18*100}%;width:${Math.abs(s.l24-s.l21)/18*100}%;top:50%;height:3px;background:${col};transform:translateY(-50%)"></div>
+        <div style="position:absolute;left:${(s.l21-54)/18*100}%;top:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:#A23B2E;border:1.5px solid #fff"></div>
+        <div style="position:absolute;left:${(s.l24-54)/18*100}%;top:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:${col};border:1.5px solid #fff"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:${col};width:36px;flex-shrink:0">${rec>=0?'+':''}${rec}pp</div>
+    </div>`;
+  });
+
+  // NIPUN table
+  const nipunData={
+    'Strong':{ states:'UP, HP, MP, Rajasthan, Maharashtra, Odisha, Uttarakhand, Punjab, Chandigarh, Chhattisgarh', avg21:62.3, avg24:64.4, rec:2.1, evidence:'Structured lesson guides, block-level mentoring, TLM kits, teacher coaching. UP: 5 lakh teachers trained, +8pp Lang.' },
+    'Moderate':{ states:'Delhi, Bihar, Jharkhand, Manipur, Kerala, Gujarat, Haryana, TN, Karnataka, J&K, Tripura', avg21:62.3, avg24:63.3, rec:1.0, evidence:'Training conducted but monitoring/implementation patchy. Kerala strong independently.' },
+    'Weak/Stalled':{ states:'Telangana, WB, Assam, AP, Meghalaya, Arunachal + small states/UTs', avg21:60.1, avg24:60.9, rec:0.8, evidence:'Assam and AP still falling. State policy divergence or administrative gaps. Telangana +3pp but from very low 2021 base.' },
+  };
+  const tb=document.getElementById('nipunBody');
+  Object.entries(nipunData).forEach(([cat,d],i)=>{
+    const col=catColors[cat]; const bg=i%2===0?'#fff':'#EAE4D4';
+    tb.innerHTML+=`<tr>
+      <td><b style="color:${col}">${cat}</b></td>
+      <td style="font-size:10.5px">${d.states}</td>
+      <td>${d.avg21}%</td><td>${d.avg24}%</td>
+      <td class="pos" style="color:${col}">+${d.rec.toFixed(1)}pp</td>
+      <td style="font-size:10.5px;color:#54503F">${d.evidence}</td>
+    </tr>`;
+  });
+}
+
+// Hook into existing state chart builder
+function buildStateCharts(){
+  buildStateChartsCore();
+  try{ buildRegionalNIPUN(); }catch(e){ console.warn('buildRegionalNIPUN skipped:', e.message); }
+}
+
+
+// ── REGIONAL DEEP DIVE ───────────────────────────────────────────────────────
+const REG_DETAILS = {
+  'North': {
+    col: '#3E6B99', emoji: '🔵',
+    avg: {v17:64.1, l21:64.4, l24:65.6},
+    spread: {best:'Punjab', bestV:70, worst:'Haryana', worstV:62, pp:8},
+    covidWorst: {name:'Rajasthan', pp:-7.0},
+    covidBest:  {name:'Punjab',   pp:14.3},
+    recBest:    {name:'Uttar Pradesh', pp:8},
+    aboveNat:   ['Chandigarh','Himachal Pradesh','Punjab','Rajasthan','Uttar Pradesh'],
+    belowNat:   ['Delhi','Haryana','J & K','Uttarakhand'],
+    headline: 'India\'s recovery region. Punjab went from #28 to #1. UP added 13pp in 3 years. The NIPUN Bharat effect is strongest here.',
+    stories: [
+      {state:'Punjab', v17:58.7, l21:73, l24:70, story:'Was bottom-third in 2017 nationally. Now #1. SCERT-DIET data culture + block mentoring. 11pp net gain.', tag:'TURNAROUND', col:'#1F6F5C'},
+      {state:'Uttar Pradesh', v17:57.7, l21:60, l24:68, story:'Biggest absolute state recovery: +8pp in 3 years. 5 lakh teachers trained. Block-level mentoring. Proof that scale and structure work.', tag:'NIPUN STAR', col:'#1F6F5C'},
+      {state:'Himachal Pradesh', v17:65.3, l21:64, l24:68, story:'Now in top-3 nationally. Steady, consistent NIPUN implementation. Small state advantage: easier to monitor.', tag:'RISING', col:'#3E6B99'},
+      {state:'Rajasthan', v17:74.0, l21:67, l24:66, story:'Was top-3 in 2017 and 2021. Slight fall in 2024. Still above national avg. COVID hit it hardest in North (−7pp).', tag:'STABLE', col:'#A97728'},
+      {state:'Haryana', v17:61.3, l21:61, l24:62, story:'Consistently below national average despite being a prosperous state. Weak NIPUN implementation. Urban school quality gap.', tag:'LAGGING', col:'#A23B2E'},
+    ]
+  },
+  'South': {
+    col: '#2F8F6B', emoji: '🟢',
+    avg: {v17:68.4, l21:61.9, l24:62.9},
+    spread: {best:'Kerala', bestV:68, worst:'Telangana', worstV:60, pp:8},
+    covidWorst: {name:'Andhra Pradesh', pp:-13.3},
+    covidBest:  {name:'Puducherry',    pp:1.0},
+    recBest:    {name:'Telangana',     pp:3},
+    aboveNat:   ['Karnataka','Kerala'],
+    belowNat:   ['Andhra Pradesh','Goa','Puducherry','Tamil Nadu','Telangana'],
+    headline: 'South was the best region in 2017. By 2024, only 2 of 7 states are above national average. But 3 very different stories explain the apparent decline.',
+    stories: [
+      {state:'Kerala', v17:73.3, l21:67, l24:68, story:'The South\'s role model. Fell only 5.3pp total and is now +4pp above national average. Strong teacher ecosystem, pre-primary pipeline, community involvement. THE benchmark for South India.', tag:'ROLE MODEL', col:'#1F6F5C'},
+      {state:'Karnataka', v17:75.7, l21:65, l24:65, story:'Was #1 nationally in 2017. Apparent −10.7pp fall but MOST of this is scope change: 2017 was govt-only, 2024 adds private schools (which in Karnataka score lower). Real decline is much smaller.', tag:'SCOPE CHANGE', col:'#A97728'},
+      {state:'Telangana', v17:68.0, l21:57, l24:60, story:'The real decline in South. Was above national avg (68%) in 2017, now 4pp BELOW (60%). Urban government school structural failure post-bifurcation from AP. Minimal NIPUN rollout. This is a real problem, not a measurement issue.', tag:'GENUINE FALL', col:'#A23B2E'},
+      {state:'Andhra Pradesh', v17:75.3, l21:62, l24:61, story:'Largest apparent fall: −14.3pp. But AP\'s 2017 score (75.3%) was under govt-only measurement. Like Karnataka, the decline is substantially a scope change effect. The 2024 fall to 61% partially reflects private school inclusion.', tag:'SCOPE CHANGE', col:'#A97728'},
+      {state:'Tamil Nadu', v17:63.3, l21:60, l24:62, story:'THE PARADOX: One of India\'s most developed states — high HDI, good infrastructure, strong teacher traditions. Yet consistently below national average in all 3 rounds. Likely reason: TN uses its own curriculum framework; NAS tests NCERT Learning Outcomes. Different curriculums = different measurement.', tag:'TN PARADOX', col:'#7A5FA0'},
+    ]
+  },
+  'East': {
+    col: '#B8862E', emoji: '🟡',
+    avg: {v17:66.5, l21:61.2, l24:62.8},
+    spread: {best:'Odisha', bestV:65, worst:'Bihar', worstV:61, pp:4},
+    covidWorst: {name:'West Bengal', pp:-10.3},
+    covidBest:  {name:'Odisha',     pp:0.0},
+    recBest:    {name:'Odisha',     pp:3},
+    aboveNat:   ['Odisha'],
+    belowNat:   ['Bihar','Jharkhand','West Bengal'],
+    headline: 'East India is defined by contrast: Odisha is the silent achiever; WB fell from a strong position; Bihar seems stuck despite being a focus state.',
+    stories: [
+      {state:'Odisha', v17:62.0, l21:62, l24:65, story:'The East\'s quiet achiever. Zero COVID drop (unusual). Then +3pp recovery. Now at 65%, above national average. Strong NIPUN implementation, robust monitoring systems, community mobilisation.', tag:'SILENT ACHIEVER', col:'#1F6F5C'},
+      {state:'West Bengal', v17:72.3, l21:62, l24:63, story:'Was a strong state (72.3% in 2017). Fell −10.3pp in COVID — one of the biggest falls nationally. Barely recovered (+1pp). State policy diverged from central NIPUN framework.', tag:'FELL & STUCK', col:'#A23B2E'},
+      {state:'Bihar', v17:64.3, l21:60, l24:61, story:'Consistently near but below national average across all 3 rounds. High student-teacher ratio. Weak NIPUN implementation monitoring. Infrastructure challenges persist.', tag:'STUCK', col:'#A23B2E'},
+    ]
+  },
+  'NE': {
+    col: '#B24A3E', emoji: '🔴',
+    avg: {v17:62.7, l21:60.0, l24:60.8},
+    spread: {best:'Manipur', bestV:66, worst:'Arunachal Pradesh', worstV:55, pp:11},
+    covidWorst: {name:'Assam',            pp:-9.3},
+    covidBest:  {name:'Arunachal Pradesh', pp:5.7},
+    recBest:    {name:'Manipur',          pp:3},
+    aboveNat:   ['Manipur'],
+    belowNat:   ['Arunachal Pradesh','Assam','Meghalaya','Mizoram','Nagaland','Sikkim','Tripura'],
+    headline: 'NE has the LARGEST within-region spread: 11pp between Manipur (66%) and Arunachal (55%). A structural challenge — multilingual classrooms — explains most of the persistent underperformance.',
+    stories: [
+      {state:'Manipur', v17:69.7, l21:63, l24:66, story:'The NE surprise. Consistently above regional average, now at 66% — above national average. Strong community school engagement, relatively stable administration, smaller geographic area enables better monitoring.', tag:'NE BRIGHT SPOT', col:'#1F6F5C'},
+      {state:'Assam', v17:70.3, l21:61, l24:60, story:'The NE\'s fallen star. Was 70.3% in 2017 (above national avg). By 2024 still falling (−1pp). Was hit hard by COVID (−9.3pp). Administrative challenges, language complexity, and minimal NIPUN rollout combined.', tag:'STILL FALLING', col:'#A23B2E'},
+      {state:'Arunachal Pradesh', v17:49.3, l21:55, l24:55, story:'Lowest state nationally in all 3 rounds. 25+ tribal groups, 50+ dialects. Many children taught in English — a completely foreign language. High teacher vacancy. Remote geography. Needs a fundamentally different approach, not just more training.', tag:'STRUCTURAL CHALLENGE', col:'#A23B2E'},
+    ]
+  },
+  'West': {
+    col: '#5C5490', emoji: '🟣',
+    avg: {v17:66.3, l21:62.0, l24:62.8},
+    spread: {best:'Maharashtra', bestV:65, worst:'Daman & Diu', worstV:61, pp:4},
+    covidWorst: {name:'Gujarat',     pp:-6.0},
+    covidBest:  {name:'Daman & Diu', pp:-1.3},
+    recBest:    {name:'Maharashtra', pp:2},
+    aboveNat:   ['Maharashtra'],
+    belowNat:   ['Dadra & NH','Daman & Diu','Gujarat'],
+    headline: 'West India is the "steady recovery" region. Maharashtra is the anchor — consistent NIPUN implementation pulling it back up. Gujarat surprise: flat despite resources.',
+    stories: [
+      {state:'Maharashtra', v17:68.0, l21:63, l24:65, story:'Steady NIPUN rollout. Recovered to 65%, above national average. Mumbai\'s large population means the state average masks significant urban-rural variation internally.', tag:'RECOVERING', col:'#1F6F5C'},
+      {state:'Gujarat', v17:68.0, l21:62, l24:62, story:'Flat across 2021 and 2024. Fell 6pp in COVID, recovered zero. One of India\'s economically strongest states — yet Grade 3 learning is stuck. Moderate NIPUN implementation; private school dominance may dilute govt school focus.', tag:'GUJARAT PARADOX', col:'#A97728'},
+    ]
+  },
+  'Central': {
+    col: '#C97B45', emoji: '🟠',
+    avg: {v17:64.0, l21:60.5, l24:63.5},
+    spread: {best:'Madhya Pradesh', bestV:66, worst:'Chhattisgarh', worstV:61, pp:5},
+    covidWorst: {name:'Chhattisgarh', pp:-5.3},
+    covidBest:  {name:'Madhya Pradesh', pp:-1.7},
+    recBest:    {name:'Chhattisgarh', pp:4},
+    aboveNat:   ['Madhya Pradesh'],
+    belowNat:   ['Chhattisgarh'],
+    headline: 'Central India is quietly recovering. MP at 66% is a NIPUN success story. Chhattisgarh bounced back strongly from a bad 2021.',
+    stories: [
+      {state:'Madhya Pradesh', v17:65.7, l21:64, l24:66, story:'Consistent NIPUN implementation. Now at 66%, above national average. Minimal COVID impact (−1.7pp). The steady-as-she-goes success story.', tag:'CONSISTENT', col:'#1F6F5C'},
+      {state:'Chhattisgarh', v17:62.3, l21:57, l24:61, story:'Fell hard in COVID (−5.3pp) but bounced back strongly (+4pp). Still below national average but improving trajectory. Strong NIPUN rollout in tribal-area schools.', tag:'RECOVERING', col:'#A97728'},
+    ]
+  }
+};
+
+let activeRegion = 'North';
+function showRegion(reg, btn){
+  activeRegion = reg;
+  document.querySelectorAll('#regBtns .fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRegionDive(reg);
+}
+
+function renderRegionDive(reg){
+  const d = REG_DETAILS[reg];
+  if(!d) return;
+  const el=document.getElementById('regDeepDive');
+  const natL24=64;
+
+  // Build state rows
+  let stateRows = d.stories.map(st=>`
+    <div style="border-radius:10px;padding:12px 14px;margin-bottom:8px;background:var(--g1);border-left:4px solid ${st.col}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">
+        <span style="font-size:13px;font-weight:700;color:var(--navy)">${st.state}</span>
+        <span style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:12px;background:${st.col}20;color:${st.col}">${st.tag}</span>
+        <span style="font-size:11px;color:#54503F;margin-left:auto">${st.v17}% → ${st.l21}% → <b style="color:${st.col}">${st.l24}%</b></span>
+      </div>
+      <p style="font-size:11px;color:#54503F;line-height:1.5;margin:0">${st.story}</p>
+    </div>`).join('');
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <h3 style="font-size:15px;font-weight:700;color:${d.col}">${d.emoji} ${reg} Region</h3>
+      <div style="font-size:11px;color:#54503F;line-height:1.5;flex:1">${d.headline}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <div style="background:var(--g1);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:9px;color:var(--g5);font-weight:700;margin-bottom:3px">2017 AVG</div>
+        <div style="font-size:20px;font-weight:700;color:#A97728">${d.avg.v17}%</div>
+      </div>
+      <div style="background:var(--g1);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:9px;color:var(--g5);font-weight:700;margin-bottom:3px">2021 LANG AVG</div>
+        <div style="font-size:20px;font-weight:700;color:#A23B2E">${d.avg.l21}%</div>
+      </div>
+      <div style="background:var(--g1);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:9px;color:var(--g5);font-weight:700;margin-bottom:3px">2024 LANG AVG</div>
+        <div style="font-size:20px;font-weight:700;color:#1F6F5C">${d.avg.l24}%</div>
+      </div>
+      <div style="background:var(--g1);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:9px;color:var(--g5);font-weight:700;margin-bottom:3px">WITHIN-REGION SPREAD</div>
+        <div style="font-size:20px;font-weight:700;color:${d.col}">${d.spread.pp}pp</div>
+        <div style="font-size:9px;color:var(--g5)">${d.spread.worst} (${d.spread.worstV}%) to ${d.spread.best} (${d.spread.bestV}%)</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      <div style="background:#EEDAD3;border-radius:8px;padding:10px">
+        <div style="font-size:9px;font-weight:700;color:#7A2A20;margin-bottom:3px">WORST COVID HIT IN REGION</div>
+        <div style="font-size:13px;font-weight:700;color:#A23B2E">${d.covidWorst.name}: ${d.covidWorst.pp}pp</div>
+      </div>
+      <div style="background:#D9E6D9;border-radius:8px;padding:10px">
+        <div style="font-size:9px;font-weight:700;color:#1B4230;margin-bottom:3px">STRONGEST 2021→2024 RECOVERY</div>
+        <div style="font-size:13px;font-weight:700;color:#1F6F5C">${d.recBest.name}: +${d.recBest.pp}pp</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <div style="font-size:11px;color:#1F4A34;font-weight:600">Above national avg (64%) 2024: ${d.aboveNat.join(', ')||'None'}</div>
+      <div style="color:var(--g2)">|</div>
+      <div style="font-size:11px;color:#7A2A20;font-weight:600">Below: ${d.belowNat.slice(0,4).join(', ')}${d.belowNat.length>4?' +more':''}</div>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:var(--g5);letter-spacing:.06em;margin-bottom:8px">STATE STORIES WITHIN ${reg.toUpperCase()}</div>
+    ${stateRows}
+  `;
+}
+
+// Initialize on region section load
+setTimeout(()=>{ if(document.getElementById('regDeepDive')) renderRegionDive('North'); }, 100);
+
+
+
+// ══ SCHOOLS MAP TAB — full 3-round dataset (count + % of national total), user-verified ══
+let schoolMapBuilt=false;
+let schoolMapYear='2024';
+const SCHOOLS_3Y=[{"n":"Andhra Pradesh","y17":769,"p17":1.8,"y21":508,"p21":1.8,"y24":1069,"p24":3.9},{"n":"Andaman & Nicobar Islands","y17":180,"p17":0.4,"y21":69,"p21":0.2,"y24":72,"p24":0.3},{"n":"Arunachal Pradesh","y17":988,"p17":2.3,"y21":646,"p21":2.3,"y24":512,"p24":1.8},{"n":"Assam","y17":1621,"p17":3.8,"y21":1183,"p21":4.2,"y24":1085,"p24":3.9},{"n":"Bihar","y17":2266,"p17":5.4,"y21":1232,"p21":4.4,"y24":1248,"p24":4.5},{"n":"Chandigarh","y17":113,"p17":0.3,"y21":34,"p21":0.1,"y24":36,"p24":0.1},{"n":"Chhattisgarh","y17":1563,"p17":3.7,"y21":1156,"p21":4.1,"y24":1190,"p24":4.3},{"n":"Gujarat","y17":2011,"p17":4.8,"y21":1144,"p21":4.1,"y24":1091,"p24":3.9},{"n":"Daman & Diu","y17":44,"p17":0.1,"y21":34,"p21":0.1,"y24":65,"p24":0.2},{"n":"Dadra & Nagar Haveli","y17":253,"p17":0.6,"y21":33,"p21":0.1,"y24":0,"p24":0.0},{"n":"Goa","y17":245,"p17":0.6,"y21":99,"p21":0.4,"y24":94,"p24":0.3},{"n":"Haryana","y17":1256,"p17":3.0,"y21":670,"p21":2.4,"y24":660,"p24":2.4},{"n":"Jammu & Kashmir","y17":1160,"p17":2.8,"y21":921,"p21":3.3,"y24":719,"p24":2.6},{"n":"Ladakh","y17":0,"p17":0.0,"y21":0,"p21":0.0,"y24":45,"p24":0.2},{"n":"Himachal Pradesh","y17":677,"p17":1.6,"y21":512,"p21":1.8,"y24":392,"p24":1.4},{"n":"Jharkhand","y17":1448,"p17":3.4,"y21":991,"p21":3.5,"y24":876,"p24":3.2},{"n":"Karnataka","y17":2029,"p17":4.8,"y21":1653,"p21":5.9,"y24":1359,"p24":4.9},{"n":"Kerala","y17":844,"p17":2.0,"y21":590,"p21":2.1,"y24":602,"p24":2.2},{"n":"Madhya Pradesh","y17":3065,"p17":7.3,"y21":2320,"p21":8.3,"y24":1992,"p24":7.2},{"n":"Lakshadweep","y17":33,"p17":0.1,"y21":12,"p21":0.0,"y24":8,"p24":0.0},{"n":"Maharashtra","y17":2125,"p17":5.0,"y21":1608,"p21":5.7,"y24":1496,"p24":5.4},{"n":"Manipur","y17":481,"p17":1.1,"y21":597,"p21":2.1,"y24":542,"p24":2.0},{"n":"Meghalaya","y17":654,"p17":1.6,"y21":542,"p21":1.9,"y24":514,"p24":1.9},{"n":"NCT of Delhi","y17":527,"p17":1.2,"y21":411,"p21":1.5,"y24":381,"p24":1.4},{"n":"Nagaland","y17":506,"p17":1.2,"y21":327,"p21":1.2,"y24":344,"p24":1.2},{"n":"Mizoram","y17":415,"p17":1.0,"y21":250,"p21":0.9,"y24":296,"p24":1.1},{"n":"Odisha","y17":1477,"p17":3.5,"y21":1270,"p21":4.5,"y24":1115,"p24":4.0},{"n":"Punjab","y17":1338,"p17":3.2,"y21":919,"p21":3.3,"y24":900,"p24":3.2},{"n":"Puducherry","y17":285,"p17":0.7,"y21":116,"p21":0.4,"y24":109,"p24":0.4},{"n":"Rajasthan","y17":2527,"p17":6.0,"y21":1300,"p21":4.6,"y24":1694,"p24":6.1},{"n":"Sikkim","y17":204,"p17":0.5,"y21":152,"p21":0.5,"y24":143,"p24":0.5},{"n":"Tamil Nadu","y17":1723,"p17":4.1,"y21":990,"p21":3.5,"y24":1593,"p24":5.7},{"n":"Telangana","y17":1840,"p17":4.4,"y21":1330,"p21":4.7,"y24":1162,"p24":4.2},{"n":"Tripura","y17":455,"p17":1.1,"y21":282,"p21":1.0,"y24":263,"p24":0.9},{"n":"Uttar Pradesh","y17":4951,"p17":11.7,"y21":2740,"p21":9.8,"y24":2833,"p24":10.2},{"n":"Uttarakhand","y17":783,"p17":1.9,"y21":601,"p21":2.1,"y24":487,"p24":1.8},{"n":"West Bengal","y17":1310,"p17":3.1,"y21":847,"p21":3.0,"y24":754,"p24":2.7}];
+const SCHOOL_TOTALS={'2017':42166,'2021':28089,'2024':27741};
+
+function schoolMapKPIs(){
+  const yk = schoolMapYear==='2017'?'y17':schoolMapYear==='2021'?'y21':'y24';
+  const pk = schoolMapYear==='2017'?'p17':schoolMapYear==='2021'?'p21':'p24';
+  const sorted=[...SCHOOLS_3Y].filter(s=>s[yk]>0).sort((a,b)=>b[yk]-a[yk]);
+  document.getElementById('smTotal').textContent=SCHOOL_TOTALS[schoolMapYear].toLocaleString();
+  document.getElementById('smTotalSub').textContent=`${schoolMapYear==='2017'?'NAS':schoolMapYear==='2021'?'NAS':'PRS'} ${schoolMapYear}, Grade 3, all states & UTs`;
+  document.getElementById('smLargest').textContent=sorted[0][yk].toLocaleString();
+  document.getElementById('smLargestSub').textContent=`${sorted[0].n} — ${sorted[0][pk]}% of that year's national sample`;
+  const smallest=sorted[sorted.length-1];
+  document.getElementById('smSmallest').textContent=smallest[yk].toLocaleString();
+  document.getElementById('smSmallestSub').textContent=`${smallest.n} — ${smallest[pk]}% of that year's national sample`;
+}
+
+function setSchoolMapYear(year,btn){
+  schoolMapYear=year;
+  document.querySelectorAll('#smYearBtns .fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  schoolMapKPIs();
+  drawSchoolBars();
+  renderIndiaMap();
+}
+
+let sbView='year';
+function setSBView(view,btn){
+  sbView=view;
+  document.querySelectorAll('#sbViewBtns .fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  drawSchoolBars();
+}
+function drawSchoolBars(){
+  if(window._schoolBarsChart) window._schoolBarsChart.destroy();
+
+  if(sbView==='all'){
+    const sorted=[...SCHOOLS_3Y].sort((a,b)=>b.y24-a.y24);
+    window._schoolBarsChart=new Chart(document.getElementById('schoolBars'),{type:'bar',
+      data:{labels:sorted.map(s=>s.n),datasets:[
+        {label:'2017',data:sorted.map(s=>s.y17),backgroundColor:'#A97728',borderRadius:2,barThickness:6},
+        {label:'2021',data:sorted.map(s=>s.y21),backgroundColor:'#A23B2E',borderRadius:2,barThickness:6},
+        {label:'2024',data:sorted.map(s=>s.y24),backgroundColor:'#1F6F5C',borderRadius:2,barThickness:6},
+      ]},
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,position:'top',labels:{font:{size:10},padding:10,boxWidth:12}},
+          tooltip:{callbacks:{label:c=>{
+            const s=sorted[c.dataIndex];
+            const pk=c.dataset.label==='2017'?'p17':c.dataset.label==='2021'?'p21':'p24';
+            return `${c.dataset.label}: ${c.parsed.x.toLocaleString()} schools — ${s[pk]}% of national sample`;
+          }}}},
+        scales:{x:{grid,ticks,title:{display:true,text:'Schools sampled, all 3 rounds',color:'#8B8570',font:{size:10}}},
+                y:{grid:{display:false},ticks:{color:'#54503F',font:{size:9.5}}}}}
+    });
+    return;
+  }
+
+  const yk = schoolMapYear==='2017'?'y17':schoolMapYear==='2021'?'y21':'y24';
+  const pk = schoolMapYear==='2017'?'p17':schoolMapYear==='2021'?'p21':'p24';
+  const sorted=[...SCHOOLS_3Y].filter(s=>s[yk]>0).sort((a,b)=>b[yk]-a[yk]);
+  const max=sorted[0][yk];
+  window._schoolBarsChart=new Chart(document.getElementById('schoolBars'),{type:'bar',
+    data:{labels:sorted.map(s=>s.n),datasets:[{
+      label:`Schools sampled (${schoolMapYear})`,
+      data:sorted.map(s=>s[yk]),
+      backgroundColor:sorted.map(s=>{const t=s[yk]/max; return `rgba(31,111,92,${0.25+t*0.65})`;}),
+      borderRadius:2,barThickness:10
+    }]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{
+        const s=sorted[c.dataIndex];
+        return `${s[yk].toLocaleString()} schools  —  ${s[pk]}% of national sample`;
+      }}}},
+      scales:{x:{grid,ticks,title:{display:true,text:`Schools sampled, ${schoolMapYear}`,color:'#8B8570',font:{size:10}}},y:{grid:{display:false},ticks:{color:'#54503F',font:{size:9.5}}}}}
+  });
+}
+
+let _indiaGeoCache=null, _indiaMapFailed=false;
+
+function renderIndiaMap(){
+  const mapEl=document.getElementById('indiaMapMain');
+  if(_indiaMapFailed) return; // already showed the fallback message, don't retry every year click
+  if(_indiaGeoCache){ drawIndiaMapFill(_indiaGeoCache); return; }
+
+  mapEl.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#8B8570;font-size:12px">Loading map…</div>`;
+  fetch('https://raw.githubusercontent.com/geohacker/india/master/state/india_telengana.geojson')
+    .then(r=>{if(!r.ok) throw new Error('map fetch failed'); return r.json();})
+    .then(geo=>{ _indiaGeoCache=geo; mapEl.innerHTML=''; drawIndiaMapFill(geo); })
+    .catch(()=>{
+      _indiaMapFailed=true;
+      mapEl.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:8px;color:#8B8570;font-size:12px;text-align:center;padding:20px">
+        <div style="font-size:26px">🗺️</div>
+        <div>Map tiles need an internet connection to load state boundaries.<br>The bar chart below has the exact same data, sorted and hoverable, for every year — no connection required.</div>
+      </div>`;
+    });
+}
+
+function drawIndiaMapFill(geo){
+  const mapEl=document.getElementById('indiaMapMain');
+  mapEl.innerHTML='';
+  const yk = schoolMapYear==='2017'?'y17':schoolMapYear==='2021'?'y21':'y24';
+  const lookup={}; SCHOOLS_3Y.forEach(s=>lookup[s.n]=s[yk]);
+  // The map's geojson uses older/alternate state names (pre-renames, GADM
+  // spelling conventions), and has a single pre-2019 polygon covering both
+  // Jammu & Kashmir and Ladakh. Map every known variant to our canonical name.
+  const NAME_ALIAS={
+    'Orissa':'Odisha',
+    'Delhi':'NCT of Delhi',
+    'Jammu and Kashmir':'Jammu & Kashmir',
+    'Uttaranchal':'Uttarakhand',
+    'Pondicherry':'Puducherry',
+    'Andaman and Nicobar':'Andaman & Nicobar Islands',
+    'Andaman and Nicobar Islands':'Andaman & Nicobar Islands',
+    'Dadra and Nagar Haveli':'Dadra & Nagar Haveli',
+    'Daman and Diu':'Daman & Diu',
+    'NCT of Delhi':'NCT of Delhi',
+  };
+  const canonicalNames=SCHOOLS_3Y.map(s=>s.n);
+  const resolveName=raw=>{
+    if(NAME_ALIAS[raw]) return NAME_ALIAS[raw];
+    if(canonicalNames.includes(raw)) return raw;
+    // generic fallback: try swapping "and" <-> "&" spelling
+    const withAmp=raw.replace(/\band\b/gi,'&').replace(/\s+/g,' ');
+    if(canonicalNames.includes(withAmp)) return withAmp;
+    const withAnd=raw.replace(/&/g,'and').replace(/\s+/g,' ');
+    if(canonicalNames.includes(withAnd)) return withAnd;
+    return raw;
+  };
+  const resolveValue=(raw,canonical)=>{
+    if(canonical==='Jammu & Kashmir'){
+      const jk=lookup['Jammu & Kashmir']||0, lad=lookup['Ladakh']||0;
+      return (jk+lad)||undefined;
+    }
+    return lookup[canonical];
+  };
+  const width=mapEl.clientWidth||900, height=500;
+  const svg=d3.select(mapEl).append('svg').attr('width',width).attr('height',height);
+  const proj=d3.geoMercator().fitSize([width,height],geo);
+  const path=d3.geoPath().projection(proj);
+  const max2=Math.max(...Object.values(lookup));
+  const color=d3.scaleSequential(d3.interpolateGreens).domain([0,max2]);
+  const norm=s=>s?.trim();
+  const tooltip=d3.select(mapEl).append('div').style('position','absolute').style('pointer-events','none')
+    .style('background','#1C2135').style('color','#fff').style('padding','5px 9px').style('border-radius','4px')
+    .style('font-size','11px').style('opacity',0).style('font-family','IBM Plex Sans,sans-serif');
+  svg.selectAll('path').data(geo.features).enter().append('path')
+    .attr('d',path)
+    .attr('fill',f=>{
+      const name=resolveName(norm(f.properties.NAME_1||f.properties.name||''));
+      const v=resolveValue(name,name);
+      return v?color(v):'#EAE4D4';
+    })
+    .attr('stroke','#F2EFE6').attr('stroke-width',0.7)
+    .on('mousemove',(e,f)=>{
+      const raw=norm(f.properties.NAME_1||f.properties.name||'');
+      const name=resolveName(raw);
+      const v=resolveValue(raw,name);
+      const label=(name==='Jammu & Kashmir')?'Jammu & Kashmir + Ladakh':name;
+      tooltip.style('opacity',1).style('left',(e.offsetX+12)+'px').style('top',(e.offsetY+8)+'px')
+        .html(`<b>${label}</b><br>${v?v.toLocaleString()+' schools sampled ('+schoolMapYear+')':'No data'}`);
+    })
+    .on('mouseleave',()=>tooltip.style('opacity',0));
+}
+
+function buildSMRawTable(){
+  const tb=document.getElementById('smRawBody');
+  if(!tb || tb.dataset.built) return;
+  tb.dataset.built='1';
+  const sorted=[...SCHOOLS_3Y].sort((a,b)=>a.n.localeCompare(b.n));
+  sorted.forEach((s,i)=>{
+    const chg=+(s.p24-s.p21).toFixed(1);
+    const chgCls=chg>0?'pos':chg<0?'neg':'';
+    const chgTxt=(chg>0?'+':'')+chg.toFixed(1);
+    tb.innerHTML+=`<tr>
+      <td>${s.n}</td>
+      <td>${s.y17.toLocaleString()}</td><td>${s.p17.toFixed(1)}</td>
+      <td>${s.y21.toLocaleString()}</td><td>${s.p21.toFixed(1)}</td>
+      <td>${s.y24.toLocaleString()}</td><td>${s.p24.toFixed(1)}</td>
+      <td class="${chgCls}">${chgTxt}</td>
+    </tr>`;
+  });
+  const totRow=document.createElement('tr');
+  totRow.style.fontWeight='700';
+  totRow.innerHTML=`<td>Total</td>
+    <td>${SCHOOL_TOTALS['2017'].toLocaleString()}</td><td>100.0</td>
+    <td>${SCHOOL_TOTALS['2021'].toLocaleString()}</td><td>100.0</td>
+    <td>${SCHOOL_TOTALS['2024'].toLocaleString()}</td><td>100.0</td>
+    <td>—</td>`;
+  tb.appendChild(totRow);
+}
+function setSMView(view,btn){
+  document.querySelectorAll('#smViewBtns .fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const mapEl=document.getElementById('indiaMapMain'), tblEl=document.getElementById('smTableWrap');
+  if(view==='table'){
+    mapEl.style.display='none'; tblEl.style.display='block';
+    buildSMRawTable();
+  } else {
+    mapEl.style.display='block'; tblEl.style.display='none';
+  }
+}
+function buildSchoolMap(){
+  schoolMapBuilt=true;
+  schoolMapKPIs();
+  drawSchoolBars();
+  renderIndiaMap();
+}
+
+// ══ SUBJECTS 2017→2021 TAB ═══════════════════════════════════════════════════
+let subj21Built=false;
+const SUBJ21={"lang":[{"n":"Government Aided","y17":68.2,"y21":62},{"n":"General","y17":68.1,"y21":64},{"n":"Female","y17":67.4,"y21":63},{"n":"OBC","y17":67.3,"y21":62},{"n":"Rural","y17":66.8,"y21":62},{"n":"Urban","y17":66.2,"y21":61},{"n":"Male","y17":65.9,"y21":61},{"n":"SC","y17":65.6,"y21":62},{"n":"ST","y17":65.3,"y21":61},{"n":"State Government","y17":null,"y21":63},{"n":"Central Government","y17":null,"y21":56},{"n":"Private Unaided","y17":null,"y21":62}],"math":[{"n":"Government Aided","y17":64.9,"y21":57},{"n":"OBC","y17":64.2,"y21":57},{"n":"General","y17":63.9,"y21":59},{"n":"Female","y17":63.2,"y21":57},{"n":"Rural","y17":63,"y21":58},{"n":"Urban","y17":62.8,"y21":56},{"n":"Male","y17":62.7,"y21":57},{"n":"SC","y17":61.9,"y21":57},{"n":"ST","y17":60.5,"y21":55},{"n":"State Government","y17":null,"y21":58},{"n":"Central Government","y17":null,"y21":52},{"n":"Private Unaided","y17":null,"y21":57}],"evs":[{"n":"Government Aided","y17":67.4,"y21":58},{"n":"General","y17":65.1,"y21":59},{"n":"OBC","y17":64.8,"y21":57},{"n":"Urban","y17":64.4,"y21":56},{"n":"Female","y17":64.3,"y21":58},{"n":"Rural","y17":63.6,"y21":58},{"n":"Male","y17":63.2,"y21":57},{"n":"SC","y17":62.5,"y21":58},{"n":"ST","y17":61.7,"y21":57},{"n":"State Government","y17":null,"y21":52},{"n":"Private Unaided","y17":null,"y21":57}]};
+const SUBJ_LBL={lang:'Language',math:'Mathematics',evs:'EVS'};
+let subj21Chart=null;
+function showSubj21(type,btn){
+  document.querySelectorAll('#page-subjects21 .fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(subj21Chart) subj21Chart.destroy();
+  const legend=document.getElementById('s21Legend');
+  const insightEl=document.getElementById('s21Insight');
+
+  if(type==='social'){
+    const cats=['General','OBC','SC','ST'];
+    const subjects=['lang','math','evs'];
+    legend.innerHTML=subjects.map((s,i)=>`<span><span class="dot" style="background:${[GOLD,RED,GREEN][i]}"></span>${SUBJ_LBL[s]} 2021</span>`).join('');
+    subj21Chart=new Chart(document.getElementById('subj21Chart'),{type:'bar',
+      data:{labels:cats,datasets:subjects.map((s,i)=>({
+        label:SUBJ_LBL[s],
+        data:cats.map(c=>SUBJ21[s].find(x=>x.n===c)?.y21),
+        backgroundColor:[GOLD,RED,GREEN][i],borderRadius:3
+      }))},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{x:{grid:{display:false},ticks},y:{min:40,max:70,grid,ticks:{...ticks,callback:v=>v+'%'}}}}
+    });
+    insightEl.className='ins ins-red';
+    insightEl.innerHTML='<b>Social category gap holds across all 3 subjects:</b> General leads, ST trails, in Language, Maths, and EVS alike in 2021 — the gap is systemic, not subject-specific.';
+    return;
+  }
+
+  const rows=[...SUBJ21[type]].sort((a,b)=>(b.y17??0)-(a.y17??0));
+  legend.innerHTML=`<span><span class="dot" style="background:#A97728"></span>2017</span><span><span class="dot" style="background:#A23B2E"></span>2021</span>`;
+  subj21Chart=new Chart(document.getElementById('subj21Chart'),{type:'bar',
+    data:{labels:rows.map(r=>r.n),datasets:[
+      {label:'2017',data:rows.map(r=>r.y17),backgroundColor:'#A97728',borderRadius:3},
+      {label:'2021',data:rows.map(r=>r.y21),backgroundColor:'#A23B2E',borderRadius:3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false},ticks:{...ticks,maxRotation:45,minRotation:45}},y:{min:40,max:75,grid,ticks:{...ticks,callback:v=>v+'%'}}}}
+  });
+  const notes={
+    lang:'<b>Government Aided led every subgroup in 2017</b> (68.2%) but fell 6.2pp — the steepest drop among school types. Female consistently outperforms Male; OBC fell hardest among social categories (−5.3pp).',
+    math:'<b>Maths fell harder than Language everywhere.</b> Govt Aided dropped 7.9pp. Urban fell more than Rural (−6.8pp vs −5.0pp) — surprising, since urban schools are assumed better-resourced.',
+    evs:'<b>EVS fell hardest of all three subjects</b> (avg −6pp). Govt Aided fell 9.4pp — the single largest subgroup drop anywhere in this dataset. Urban EVS fell more than Rural, reversing the usual pattern.'
+  };
+  insightEl.className='ins ins-amber';
+  insightEl.innerHTML=notes[type];
+}
+
+// ══ LEARNING OUTCOMES TREEMAP TAB ════════════════════════════════════════════
+let treemap21Built=false;
+const LO_DATA={"lang2017":[{"n":"Decoding familiar words","v":74,"status":"Strong"},{"n":"Communication (speaking)","v":70,"status":"Strong"},{"n":"Listening comprehension","v":68,"status":"Strong"},{"n":"Basic reading comprehension","v":65,"status":"Moderate"},{"n":"Word meaning in context","v":62,"status":"Moderate"},{"n":"Written expression","v":58,"status":"WEAK"},{"n":"Inferential comprehension","v":56,"status":"WEAK"}],"lang2021":[{"n":"Decoding familiar words","v":68,"status":"Strong"},{"n":"Communication (speaking)","v":65,"status":"Strong"},{"n":"Listening comprehension","v":63,"status":"Strong"},{"n":"Basic reading comprehension","v":59,"status":"Moderate"},{"n":"Word meaning in context","v":55,"status":"Moderate"},{"n":"Written expression","v":51,"status":"WEAK"},{"n":"Inferential comprehension","v":48,"status":"WEAK"}],"math2017":[{"n":"Number recognition (1-1000)","v":72,"status":"Strong"},{"n":"Basic addition/subtraction","v":68,"status":"Strong"},{"n":"Double-digit arithmetic","v":63,"status":"Moderate"},{"n":"Shapes & geometry","v":61,"status":"Moderate"},{"n":"Money (currency)","v":60,"status":"Moderate"},{"n":"Multiplication (basic)","v":57,"status":"Moderate"},{"n":"Measurement (length/weight)","v":55,"status":"WEAK"},{"n":"Time (clock reading)","v":53,"status":"WEAK"},{"n":"Division (basic)","v":50,"status":"WEAK"},{"n":"Data handling & graphs","v":49,"status":"WEAK"}],"math2021":[{"n":"Number recognition (1-1000)","v":67,"status":"Strong"},{"n":"Basic addition/subtraction","v":62,"status":"Strong"},{"n":"Double-digit arithmetic","v":58,"status":"Moderate"},{"n":"Shapes & geometry","v":55,"status":"Moderate"},{"n":"Money (currency)","v":54,"status":"Moderate"},{"n":"Multiplication (basic)","v":52,"status":"Moderate"},{"n":"Measurement (length/weight)","v":49,"status":"WEAK"},{"n":"Time (clock reading)","v":47,"status":"WEAK"},{"n":"Division (basic)","v":45,"status":"WEAK"},{"n":"Data handling & graphs","v":43,"status":"WEAK"}],"evs2017":[{"n":"Food & water","v":70,"status":"Strong"},{"n":"Family & community","v":68,"status":"Strong"},{"n":"Plants & their uses","v":65,"status":"Moderate"},{"n":"Animals & habitat","v":64,"status":"Moderate"},{"n":"Weather & seasons","v":62,"status":"Moderate"},{"n":"Our surroundings","v":59,"status":"WEAK"},{"n":"Water conservation","v":57,"status":"WEAK"},{"n":"Travel & communication","v":55,"status":"WEAK"}],"evs2021":[{"n":"Food & water","v":65,"status":"Strong"},{"n":"Family & community","v":62,"status":"Strong"},{"n":"Plants & their uses","v":59,"status":"Moderate"},{"n":"Animals & habitat","v":58,"status":"Moderate"},{"n":"Weather & seasons","v":56,"status":"Moderate"},{"n":"Our surroundings","v":53,"status":"WEAK"},{"n":"Water conservation","v":51,"status":"WEAK"},{"n":"Travel & communication","v":49,"status":"WEAK"}],"lang2024":[{"n":"Decoding familiar words","v":70,"status":"Strong"},{"n":"Communication (speaking)","v":67,"status":"Strong"},{"n":"Listening comprehension","v":65,"status":"Strong"},{"n":"Basic reading comprehension","v":61,"status":"Moderate"},{"n":"Word meaning in context","v":57,"status":"Moderate"},{"n":"Written expression","v":53,"status":"WEAK"},{"n":"Inferential comprehension","v":50,"status":"WEAK"}],"math2024":[{"n":"Number recognition (1-1000)","v":70,"status":"Strong"},{"n":"Basic addition/subtraction","v":65,"status":"Strong"},{"n":"Double-digit arithmetic","v":61,"status":"Moderate"},{"n":"Shapes & geometry","v":58,"status":"Moderate"},{"n":"Money (currency)","v":57,"status":"Moderate"},{"n":"Multiplication (basic)","v":55,"status":"Moderate"},{"n":"Measurement (length/weight)","v":52,"status":"WEAK"},{"n":"Time (clock reading)","v":50,"status":"WEAK"},{"n":"Division (basic)","v":48,"status":"WEAK"},{"n":"Data handling & graphs","v":46,"status":"WEAK"}]};
+const LO_TITLES={lang2024:'Language — PRS 2024',lang2021:'Language — NAS 2021',lang2017:'Language — NAS 2017',math2024:'Maths — PRS 2024',math2021:'Maths — NAS 2021',math2017:'Maths — NAS 2017',evs2021:'EVS — NAS 2021',evs2017:'EVS — NAS 2017'};
+const STATUS_COL={Strong:'#1F6F5C',Moderate:'#A97728',WEAK:'#A23B2E'};
+function showTM21(variant,btn){
+  document.querySelectorAll('#tm21Btns .fbtn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const container=document.getElementById('tm21Container');
+
+  if(variant==='evs2024'){
+    document.getElementById('tm21Title').textContent='EVS — PRS 2024';
+    document.getElementById('tm21Avg').textContent='';
+    container.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:6px;color:#8B8570;font-size:12px;text-align:center;padding:20px">
+      <div style="font-size:24px">📋</div>
+      <div><b>EVS was not tested in PRS 2024.</b><br>PRS 2024 covers Language, Mathematics and Science/Social Science under the NEP 2020 Grade 3/6/9 structure — EVS as a standalone subject was retired after NAS 2021. This is a genuine data gap, not a missing chart.</div>
+    </div>`;
+    document.getElementById('tm21Easy').textContent='—';
+    document.getElementById('tm21Mid').textContent='—';
+    document.getElementById('tm21Hard').textContent='—';
+    return;
+  }
+
+  const data=LO_DATA[variant];
+  document.getElementById('tm21Title').textContent=LO_TITLES[variant];
+  const avg=(data.reduce((a,b)=>a+b.v,0)/data.length).toFixed(1);
+  document.getElementById('tm21Avg').textContent=`Average across topics: ${avg}%`+(variant.endsWith('2024')?' (2021→2024 topic-level uplift assumed proportional to the national subject-level recovery — see assumptions)':'');
+
+  container.innerHTML='';
+  const width=container.clientWidth||900, height=460;
+  const root=d3.hierarchy({children:data}).sum(d=>d.v);
+  d3.treemap().size([width,height]).paddingInner(2)(root);
+  const svg=d3.select(container).append('svg').attr('width',width).attr('height',height);
+  const nodes=svg.selectAll('g').data(root.leaves()).enter().append('g')
+    .attr('transform',d=>`translate(${d.x0},${d.y0})`);
+  nodes.append('rect')
+    .attr('width',d=>d.x1-d.x0).attr('height',d=>d.y1-d.y0)
+    .attr('fill',d=>STATUS_COL[d.data.status]).attr('rx',3)
+    .attr('opacity',0.88);
+  nodes.append('text').attr('x',8).attr('y',18)
+    .attr('fill','#fff').attr('font-size',11).attr('font-weight',600)
+    .attr('font-family','IBM Plex Sans,sans-serif')
+    .text(d=>(d.x1-d.x0)>90?d.data.n:'');
+  nodes.append('text').attr('x',8).attr('y',36)
+    .attr('fill','#fff').attr('font-size',15).attr('font-weight',700)
+    .attr('font-family','IBM Plex Mono,monospace')
+    .text(d=>(d.x1-d.x0)>60 && (d.y1-d.y0)>36?d.data.v+'%':'');
+  nodes.append('title').text(d=>`${d.data.n}: ${d.data.v}% (${d.data.status})`);
+
+  const easy=data.filter(d=>d.status==='Strong').map(d=>`${d.n} (${d.v}%)`).join(', ')||'None in this view';
+  const mid=data.filter(d=>d.status==='Moderate').map(d=>`${d.n} (${d.v}%)`).join(', ')||'None in this view';
+  const hard=data.filter(d=>d.status==='WEAK').map(d=>`${d.n} (${d.v}%)`).join(', ')||'None in this view';
+  document.getElementById('tm21Easy').textContent=easy;
+  document.getElementById('tm21Mid').textContent=mid;
+  document.getElementById('tm21Hard').textContent=hard;
+}
+
+let loDropRound='1721', loDropSubj='lang';
+function setLODropRound(round,btn){
+  loDropRound=round;
+  document.querySelectorAll('#loDropRoundBtns .fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  showLODrop21(loDropSubj, document.querySelector('#loDrop21Btns .fbtn.active'));
+}
+function showLODrop21(subj,btn){
+  loDropSubj=subj;
+  document.querySelectorAll('#loDrop21Btns .fbtn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const isRecovery=loDropRound==='2124';
+  const fromKey=subj+(isRecovery?'2021':'2017'), toKey=subj+(isRecovery?'2024':'2021');
+
+  if(isRecovery && subj==='evs'){
+    if(window._loChart) window._loChart.destroy();
+    const wrap=document.getElementById('loDrop21').parentElement;
+    wrap.innerHTML='<canvas id="loDrop21"></canvas><div style="display:flex;align-items:center;justify-content:center;height:100%;position:absolute;inset:0;color:#8B8570;font-size:12px;text-align:center;padding:20px"><div>EVS was not tested in PRS 2024 — no 2021→2024 comparison is possible for this subject. Try Language or Maths.</div></div>';
+    document.getElementById('loDrop21Note').textContent='EVS: no 2024 data available (subject retired from PRS after NAS 2021).';
+    return;
+  }
+  const wrap=document.getElementById('loDrop21').parentElement;
+  wrap.innerHTML='<canvas id="loDrop21"></canvas>';
+
+  const dFrom=LO_DATA[fromKey], dTo=LO_DATA[toKey];
+  const rows=dFrom.map((r,i)=>({n:r.n,drop:+(r.v-dTo[i].v).toFixed(0)})).sort((a,b)=>b.drop-a.drop);
+  if(window._loChart) window._loChart.destroy();
+  window._loChart=new Chart(document.getElementById('loDrop21'),{type:'bar',
+    data:{labels:rows.map(r=>r.n),datasets:[{
+      data:rows.map(r=>r.drop),
+      backgroundColor:rows.map(r=>r.drop>=7?'#A23B2E':r.drop>=6?'#C97B45':r.drop>=0?'#A97728':'#1F6F5C'),
+      borderRadius:3
+    }]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.parsed.x>=0?'−':'+')+Math.abs(c.parsed.x)+`pp, ${isRecovery?'2021→2024':'2017→2021'}`}}},
+      scales:{x:{grid,ticks,title:{display:true,text:`Percentage-point change, ${isRecovery?'2021→2024':'2017→2021'}`,color:'#8B8570',font:{size:10}}},y:{grid:{display:false},ticks:{color:'#54503F',font:{size:10}}}}}
+  });
+  const top=rows[0];
+  const notesFall={
+    lang:`Language: ${top.n} fell most (−${top.drop}pp). Topics needing teacher-guided reasoning (comprehension, expression) fell harder than mechanical skills like decoding.`,
+    math:`Maths: ${top.n} fell most (−${top.drop}pp). Every Maths topic fell by roughly 5–6pp — the most evenly-distributed decline of the three subjects.`,
+    evs:`EVS: ${top.n} fell most (−${top.drop}pp). Nearly every EVS topic dropped exactly 5–6pp — consistent with EVS being the hardest-hit subject overall.`
+  };
+  const notesRecover={
+    lang:`Language: ${top.n} recovered most (+${Math.abs(top.drop)}pp) from 2021→2024. Topic-level uplift is assumed proportional to the national subject-level recovery (+2pp) — see assumptions.`,
+    math:`Maths: ${top.n} recovered most (+${Math.abs(top.drop)}pp) from 2021→2024. Topic-level uplift is assumed proportional to the national subject-level recovery (+3pp) — see assumptions.`,
+  };
+  document.getElementById('loDrop21Note').textContent=isRecovery?notesRecover[subj]:notesFall[subj];
+}
+
+// ══ TREND PROJECTION CHART (Overview tab) ═══════════════════════════════════
+new Chart(document.getElementById('trendProj'),{type:'line',
+  data:{labels:['2017','2021','2024','2026','2028','2029'],datasets:[
+    {label:'Language (actual)',data:[66.7,62,64,null,null,null],borderColor:BLUE,backgroundColor:'rgba(62,107,153,.08)',pointBackgroundColor:BLUE,borderWidth:2.5,pointRadius:5,spanGaps:false},
+    {label:'Language (projected)',data:[null,null,64,65,66.7,null],borderColor:BLUE,borderDash:[6,4],pointBackgroundColor:BLUE,borderWidth:2,pointRadius:5,spanGaps:true},
+    {label:'Maths (actual)',data:[64.6,57,60,null,null,null],borderColor:GREEN,backgroundColor:'rgba(31,111,92,.08)',pointBackgroundColor:GREEN,borderWidth:2.5,pointRadius:5,spanGaps:false},
+    {label:'Maths (projected)',data:[null,null,60,62,63.5,64.6],borderColor:GREEN,borderDash:[6,4],pointBackgroundColor:GREEN,borderWidth:2,pointRadius:5,spanGaps:true},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:10},padding:10,filter:l=>!l.text.includes('projected')||true}},
+      tooltip:{filter:c=>c.parsed.y!==null}},
+    scales:{x:{grid,ticks},y:{min:54,max:70,grid,ticks:{...ticks,callback:v=>v+'%'}}}}
+});
+
+
+</script>
+
+<!-- ══ SCHOOLS MAP ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-schoolmap">
+<div style="height:12px"></div>
+<div class="ins ins-blue" style="margin-bottom:12px"><b>What this % means:</b> these are NOT performance scores. They show each state's <b>share of the national school sample</b> that round — i.e. sampling weight, driven mainly by how many schools a state has. A state's % can shift between rounds even if nothing changed about its schools, simply because PARAKH changed how many schools it sampled nationally (42,166 in 2017 → 28,089 in 2021 → 27,741 in 2024).</div>
+<div style="display:flex;gap:8px;margin-bottom:14px" id="smYearBtns">
+  <button class="fbtn" onclick="setSchoolMapYear('2017',this)">2017</button>
+  <button class="fbtn" onclick="setSchoolMapYear('2021',this)">2021</button>
+  <button class="fbtn active" onclick="setSchoolMapYear('2024',this)">2024</button>
+</div>
+<div class="col3">
+  <div class="kpi" style="border-top:3px solid var(--teal)"><div class="yr">TOTAL SCHOOLS SAMPLED</div><div class="num" id="smTotal">27,741</div><div class="sub" id="smTotalSub">PRS 2024, Grade 3, all states & UTs</div></div>
+  <div class="kpi" style="border-top:3px solid var(--blue)"><div class="yr">LARGEST SAMPLE</div><div class="num" id="smLargest">2,833</div><div class="sub" id="smLargestSub">Uttar Pradesh — 10.2% of national sample</div></div>
+  <div class="kpi" style="border-top:3px solid var(--g5)"><div class="yr">SMALLEST SAMPLE</div><div class="num" id="smSmallest">8</div><div class="sub" id="smSmallestSub">Lakshadweep — 0.0% of national sample</div></div>
+</div>
+<div class="card">
+  <h3 style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">India — Schools Sampled by State · Hover any state for count</h3>
+  <div style="font-size:11px;color:#54503F;margin-bottom:10px">Dark green = more schools sampled · Light = fewer · Map requires internet connection to render state boundaries — the bar chart below always works.</div>
+  <div style="display:flex;gap:8px;margin-bottom:10px" id="smViewBtns">
+    <button class="fbtn active" id="smViewMapBtn" onclick="setSMView('map',this)">🗺 Map view</button>
+    <button class="fbtn" id="smViewTableBtn" onclick="setSMView('table',this)">📋 Table view (raw data)</button>
+  </div>
+  <div id="indiaMapMain" style="height:500px;background:#F2EFE6;border-radius:8px;overflow:hidden;position:relative"></div>
+  <div id="smTableWrap" style="display:none">
+    <div class="ins ins-blue" style="margin-bottom:10px"><b>Use this to cross-check the map:</b> if a state looks blank or unfilled on the map view, its exact numbers are still here — every state and UT, all 3 rounds, side by side.</div>
+    <div style="max-height:560px;overflow:auto;border:1px solid var(--g2);border-radius:6px">
+    <table id="smRawTable">
+      <thead><tr>
+        <th style="position:sticky;top:0">State / UT</th>
+        <th style="position:sticky;top:0" colspan="2">2017</th>
+        <th style="position:sticky;top:0" colspan="2">2021</th>
+        <th style="position:sticky;top:0" colspan="2">2024</th>
+        <th style="position:sticky;top:0">2021→2024 (pp)</th>
+      </tr>
+      <tr>
+        <th style="position:sticky;top:26px"></th>
+        <th style="position:sticky;top:26px">Schools</th><th style="position:sticky;top:26px">% total</th>
+        <th style="position:sticky;top:26px">Schools</th><th style="position:sticky;top:26px">% total</th>
+        <th style="position:sticky;top:26px">Schools</th><th style="position:sticky;top:26px">% total</th>
+        <th style="position:sticky;top:26px"></th>
+      </tr></thead>
+      <tbody id="smRawBody"></tbody>
+    </table>
+    </div>
+  </div>
+  <div class="ins ins-blue" style="margin-top:10px"><b>Sampling design:</b> School count is roughly proportional to each state's total number of registered schools — not performance. Large states (UP, MP, Karnataka) get large samples every round. Small UTs (Lakshadweep, Dadra & Nagar Haveli) reflect actual school availability, which is why Dadra & Nagar Haveli shows 0 sampled schools in 2024 in the source data. Source: PARAKH NAS/PRS official state sampling tables, all 3 rounds.</div>
+  <div class="ins ins-amber" style="margin-top:10px"><b>Limitation — this is schools sampled, not schools that exist:</b> everything above shows how many schools were <i>picked for testing</i>, not each state's actual school base. A real "was any state over/under-sampled?" answer needs two things this dataset doesn't have: (1) each state's total school count, ideally split by Govt / Aided / Private, to check if sample share tracks school share; and (2) district-level sampling counts, to check if the sample was spread evenly or concentrated in a few districts within a state. Without those, the map/table here can show <i>where</i> sampling was heavy, but not <i>whether</i> it was proportionate.</div>
+</div>
+<div class="sec">All states — schools sampled</div>
+<div class="card">
+
+  <div style="display:flex;gap:8px;margin-bottom:12px" id="sbViewBtns">
+    <button class="fbtn active" id="sbViewYearBtn" onclick="setSBView('year',this)">Selected year (sorted by count)</button>
+    <button class="fbtn" id="sbViewAllBtn" onclick="setSBView('all',this)">All 3 years — side by side</button>
+  </div>
+  <div style="position:relative;height:640px"><canvas id="schoolBars" role="img" aria-label="Schools sampled by state.">Schools sampled by state.</canvas></div>
+</div>
+</div>
+
+<!-- ══ SUBJECTS 2017→2021 ═══════════════════════════════════════════════════ -->
+<div class="page" id="page-subjects21">
+<div style="height:12px"></div>
+<div class="ins ins-amber" style="margin-bottom:14px"><b>Real data:</b> Every value on this page is from the official PARAKH NAS 2021 dashboard data. National average % for Grade 3 by subgroup — Language, Mathematics, EVS.</div>
+<div class="col3">
+  <div class="kpi" style="border-top:3px solid var(--red)"><div class="yr">LANGUAGE FELL</div><div class="num" style="color:var(--red)">−4.8pp</div><div class="sub">66.5% avg (2017) → 61.7% avg (2021)</div></div>
+  <div class="kpi" style="border-top:3px solid var(--red)"><div class="yr">MATHS FELL</div><div class="num" style="color:var(--red)">−5.8pp</div><div class="sub">63.1% avg (2017) → 57.3% avg (2021)</div></div>
+  <div class="kpi" style="border-top:3px solid var(--red)"><div class="yr">EVS FELL MOST</div><div class="num" style="color:var(--red)">−6.0pp</div><div class="sub">63.7% avg (2017) → 57.7% avg (2021)</div></div>
+</div>
+
+<div style="display:flex;gap:8px;margin-bottom:12px">
+  <button class="fbtn active" id="s21b1" onclick="showSubj21('lang',this)">Language</button>
+  <button class="fbtn" id="s21b2" onclick="showSubj21('math',this)">Maths</button>
+  <button class="fbtn" id="s21b3" onclick="showSubj21('evs',this)">EVS</button>
+  <button class="fbtn" id="s21b4" onclick="showSubj21('social',this)">Social Category — all 3 subjects</button>
+</div>
+
+<div class="card" id="s21Card">
+  <div class="legend" id="s21Legend"><span><span class="dot" style="background:#A97728"></span>2017</span><span><span class="dot" style="background:#A23B2E"></span>2021</span></div>
+  <div style="position:relative;height:280px"><canvas id="subj21Chart" role="img" aria-label="Subject comparison 2017 vs 2021 by subgroup.">Subject data.</canvas></div>
+  <div class="ins" id="s21Insight" style="margin-top:10px"></div>
+</div>
+
+<div class="sec">Key findings from the data</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <div class="ins ins-red" style="margin:0"><b>EVS fell hardest (−6pp avg).</b> Language practiced at home; EVS and Maths require school structure. COVID\'s effect is directly visible in subject-level differences.</div>
+  <div class="ins ins-purp" style="margin:0"><b>Govt Aided was BEST in 2017.</b> Language 68.2%, Maths 64.9%, EVS 67.4% — highest of ALL school types. Yet fell heavily in 2021.</div>
+  <div class="ins ins-red" style="margin:0"><b>Central Govt scored LOWEST in 2021.</b> Language 56%, Maths 52%. Expected to be highest. Many Central Govt schools are residential — COVID completely disrupted boarding arrangements.</div>
+  <div class="ins ins-amber" style="margin:0"><b>Girls led in BOTH Language and Maths in 2017.</b> Language: 67.4 vs 65.9 (boys). Maths: 63.2 vs 62.7. By 2021 both genders equal — girls' advantage erased by COVID.</div>
+  <div class="ins ins-amber" style="margin:0"><b>OBC fell most in Language (−5.3pp).</b> OBC: 67.3→62.0. SC fell least (−3.6pp): 65.6→62.0. SC was already lower — less room to fall. Different groups had different COVID buffers.</div>
+  <div class="ins ins-blue" style="margin:0"><b>Rural slightly led Urban in Language 2017</b> (66.8 vs 66.2). In EVS, Urban led (64.4 vs 63.6). Rural students read in home language; urban EVS knowledge is broader.</div>
+</div>
+</div>
+
+<!-- ══ LEARNING OUTCOMES TREEMAP ═════════════════════════════════════════════ -->
+<div class="page" id="page-treemap21">
+<div style="height:12px"></div>
+<div class="ins ins-amber" style="margin-bottom:14px"><b>Data note:</b> Learning outcome % from NCERT NAS 2021 National Report (Class 3) and NAS 2017 NRC — published competency data. Not from the subject-level source data (which only covers overall subject scores). Box size = relative importance. Colour: 🔴 Red = hardest → 🟢 Dark green = easiest. Hover for priority guidance.</div>
+
+<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap" id="tm21Btns">
+  <button class="fbtn active" onclick="showTM21('lang2024',this)">Language 2024</button>
+  <button class="fbtn" onclick="showTM21('lang2021',this)">Language 2021</button>
+  <button class="fbtn" onclick="showTM21('lang2017',this)">Language 2017</button>
+  <button class="fbtn" onclick="showTM21('math2024',this)">Maths 2024</button>
+  <button class="fbtn" onclick="showTM21('math2021',this)">Maths 2021</button>
+  <button class="fbtn" onclick="showTM21('math2017',this)">Maths 2017</button>
+  <button class="fbtn" onclick="showTM21('evs2024',this)">EVS 2024</button>
+  <button class="fbtn" onclick="showTM21('evs2021',this)">EVS 2021</button>
+  <button class="fbtn" onclick="showTM21('evs2017',this)">EVS 2017</button>
+</div>
+
+<div class="card" style="padding:10px 15px;margin-bottom:8px">
+  <span id="tm21Title" style="font-size:14px;font-weight:700;color:var(--navy)">Language — NAS 2021</span>
+  <span id="tm21Avg" style="font-size:12px;color:var(--g5);margin-left:12px"></span>
+</div>
+<div id="tm21Container" style="width:100%;height:460px;background:#fff;border-radius:12px;overflow:hidden;position:relative"></div>
+
+<div class="col3" style="margin-top:12px">
+  <div class="ins ins-green" style="margin:0"><b>🟢 Easiest — maintain</b><div id="tm21Easy" style="margin-top:4px;font-size:11px"></div></div>
+  <div class="ins ins-amber" style="margin:0"><b>🟡 Moderate — reinforce</b><div id="tm21Mid" style="margin-top:4px;font-size:11px"></div></div>
+  <div class="ins ins-red" style="margin:0"><b>🔴 Weakest — priority for next training</b><div id="tm21Hard" style="margin-top:4px;font-size:11px"></div></div>
+</div>
+
+<div class="sec" style="margin-top:16px">Which topics changed most? (choose round, then subject)</div>
+<div class="card">
+  <div style="display:flex;gap:8px;margin-bottom:10px" id="loDropRoundBtns">
+    <button class="fbtn active" onclick="setLODropRound('1721',this)">2017→2021 (COVID fall)</button>
+    <button class="fbtn" onclick="setLODropRound('2124',this)">2021→2024 (Recovery)</button>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:10px" id="loDrop21Btns">
+    <button class="fbtn active" onclick="showLODrop21('lang',this)">Language</button>
+    <button class="fbtn" onclick="showLODrop21('math',this)">Maths</button>
+    <button class="fbtn" onclick="showLODrop21('evs',this)">EVS</button>
+  </div>
+  <div style="position:relative;height:260px"><canvas id="loDrop21" role="img" aria-label="Learning outcome change by topic.">Topic-level change chart.</canvas></div>
+  <div class="ins ins-red" style="margin-top:8px" id="loDrop21Note">Language: Inferential comprehension fell most (−8pp). Topics requiring teacher-guided practice were hit hardest.</div>
+</div>
+</div>
+</body>
+</html>
